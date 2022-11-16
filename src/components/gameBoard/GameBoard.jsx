@@ -7,10 +7,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { winCombinations } from "../../helpers/winCombinations";
 
 export const GameBoard = ({ navigation }) => {
-  const [gameBoard, setGameBoard] = useState(gameBoardEase);
+  const [gameBoard, setGameBoard] = useState(gameBoardEase); // { id: "1", state: "", move: "" }
   const [countPlayer, setCountPlayer] = useState("x");
-  const [winGame, setWinGame] = useState(false);
+  const [winGame, setWinGame] = useState(null); // результаты игры: 0, 0.5, 1
   const [btDis, setBtDis] = useState(false);
+  const [letterWin, setLetterWin] = useState(""); // 'x' или 'o'
+  const [winStyle, setWinStyle] = useState(null); // комбинация победная [0, 1, 2]
 
   const gamePress = (el, ind) => {
     if (gameBoard[ind].state !== "") {
@@ -24,8 +26,7 @@ export const GameBoard = ({ navigation }) => {
     setCountPlayer(countPlayer === "x" ? "o" : "x");
   };
 
-  const winPlay = () => {
-    const letter = countPlayer === "x" ? "o" : "x";
+  const winPlay = (letter) => {
     const findWin = winCombinations.find(
       (el) =>
         gameBoard[el[0]].state === letter &&
@@ -34,20 +35,44 @@ export const GameBoard = ({ navigation }) => {
     );
     return findWin ? findWin : null;
   };
+
   useEffect(() => {
     setGameBoard([...gameBoardEase]);
   }, []);
 
   useEffect(() => {
-    const winG = winPlay();
+    let winG = null;
+    winG = winPlay("x");
+    if (!winG) {
+      winG = winPlay("o");
+    }
     if (winG) {
-      setWinGame(true);
+      const letterW = gameBoard[winG[0]].state;
+      setLetterWin(letterW);
       setBtDis(true);
+      setWinStyle(winG);
+      setWinGame("1");
+      return;
+    }
+    const stop = draw();
+    if (!stop || stop.length < 1) {
+      return;
     }
   }, [gameBoard]);
 
+  const draw = () => {
+    let emptyArr = gameBoard.filter((el) => el.state === "");
+    if (!emptyArr || emptyArr.length < 1) {
+      setWinGame("0.5");
+      setBtDis(true);
+      return [];
+    }
+    return emptyArr;
+  };
+
   const restart = () => {
-    setWinGame(false);
+    setWinGame(null);
+    setWinStyle(null);
     setCountPlayer("x");
     setGameBoard([...gameBoardEase]);
     setBtDis(false);
@@ -56,6 +81,13 @@ export const GameBoard = ({ navigation }) => {
   return (
     <Flex style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
+        let up = null;
+        if (winStyle) {
+          up =
+            winStyle.find((elem) => {
+              return elem === ind;
+            }) + 1;
+        }
         const square = (
           <TouchableOpacity
             disabled={btDis}
@@ -63,18 +95,23 @@ export const GameBoard = ({ navigation }) => {
             style={styles.button}
             onPress={() => gamePress(el, ind)}
           >
-            {/* <Text>{el.state}</Text> */}
-            {el.state === "x" && <Ionicons name="close-outline" size={47} color="#d752ff" />}
-            {el.state === "o" && <Ionicons name="ellipse-outline" size={37} color="#45fcaf" />}
+            {el.state === "x" && (
+              <Ionicons name="close-outline" size={up ? 105 : 69} color="#d752ff" />
+            )}
+            {el.state === "o" && (
+              <Ionicons name="ellipse-outline" size={up ? 95 : 61} color="#45fcaf" />
+            )}
           </TouchableOpacity>
         );
         return square;
       })}
       {winGame && (
         <ModalWin
+          whoWin={"player"}
+          winGame={winGame}
           restart={restart}
           navigation={navigation}
-          winPlayer={countPlayer === "x" ? "o" : "x"}
+          letterWin={letterWin}
         />
       )}
     </Flex>

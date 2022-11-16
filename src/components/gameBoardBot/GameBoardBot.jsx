@@ -8,18 +8,21 @@ import { winCombinations } from "../../helpers/winCombinations";
 import { useSelector, useDispatch } from "react-redux";
 import { nextBot } from "../../redux/whoStartSlise";
 import { getRandomInt } from "../../helpers/getRandomInt";
+import { getBestMove } from "../../helpers/getBastMove";
 
 export const GameBoardBot = ({ lvl, navigation }) => {
-  const [gameBoard, setGameBoard] = useState(gameBoardEase);
-  const nextStart = useSelector((state) => state.nextStart); // кто начинает?
-  const [whoPlay, setWhoPlay] = useState(nextStart); // кто ходит?
-  const [countPlayer, setCountPlayer] = useState("x"); // буква на очереди
-  const [winGame, setWinGame] = useState("0"); // результаты игры: 0, 0.5, 1
-  const [whoWin, setWhoWin] = useState(null); // комбинация победная
+  const [gameBoard, setGameBoard] = useState(gameBoardEase); // { id: "1", state: "", move: "" }
+  const nextStart = useSelector((state) => state.nextStart); // кто начинает? 'bot' или 'player'
+  const [whoPlay, setWhoPlay] = useState(nextStart); // кто ходит? 'bot' или 'player'
+  const [countPlayer, setCountPlayer] = useState("x"); // буква на очереди 'x' или 'o'
+  const [winGame, setWinGame] = useState(null); // результаты игры: 0, 0.5, 1
+  const [whoWin, setWhoWin] = useState(null); //
+  const [winStyle, setWinStyle] = useState(null); // комбинация победная [0, 1, 2]
+  const [letterWin, setLetterWin] = useState(""); // 'x' или 'o'
   const [btDis, setBtDis] = useState(false);
   const dispatch = useDispatch();
 
-  // при маунте сбрасывает доску в ноль и передает ход
+  // при маунте сбрасывает доску в ноль
   useEffect(() => {
     setGameBoard([...gameBoardEase]);
   }, []);
@@ -37,27 +40,45 @@ export const GameBoardBot = ({ lvl, navigation }) => {
       winG = winPlay("o");
     }
     if (winG) {
-      setWinGame("1");
       setBtDis(true);
-      setWhoWin(winG);
+      setWinStyle(winG);
       return;
     }
-    draw();
-  }, [gameBoard]);
-
-  // делает ходы ботом если его очередь
-  useEffect(() => {
+    const stop = draw();
+    if (!stop || stop.length < 1) {
+      return;
+    }
+    // если игра продолжается тогда ходит бот
     if (whoPlay === "player") {
       return;
     }
     gamePress(handeleBot());
-  }, [whoPlay]);
+  }, [gameBoard]);
+
+  useEffect(() => {
+    if (!winStyle) {
+      return;
+    }
+    const letterW = gameBoard[winStyle[0]].state;
+    setLetterWin(letterW);
+    const whoW = gameBoard[winStyle[0]].move;
+    setWhoWin(whoW);
+    setWinGame("1");
+    return;
+  }, [winStyle]);
 
   // высщитывает куда походить боту
   const handeleBot = () => {
     const emptyArr = draw();
-    const x = getRandomInt(emptyArr.length - 1);
-    return { el: emptyArr[x], ind: emptyArr[x].id - 1 };
+    let res = null;
+    let x = null;
+    if (lvl === "ease") {
+      x = getRandomInt(emptyArr.length);
+      res = { el: emptyArr[x], ind: emptyArr[x].id - 1 };
+    } else {
+      res = getBestMove({ letter: countPlayer, gameBoard, emptyArr });
+    }
+    return res;
   };
 
   // событие хода
@@ -68,9 +89,9 @@ export const GameBoardBot = ({ lvl, navigation }) => {
     if (gameBoard[ind].state !== "") {
       return;
     }
+    const newSquare = { id: el.id, state: countPlayer, move: whoPlay };
     setCountPlayer(countPlayer === "x" ? "o" : "x");
     setWhoPlay(whoPlay === "bot" ? "player" : "bot");
-    const newSquare = { id: el.id, state: countPlayer };
     setGameBoard((prevState) => {
       prevState.splice(ind, 1, newSquare);
       return [...prevState];
@@ -91,16 +112,19 @@ export const GameBoardBot = ({ lvl, navigation }) => {
   // проверка на ничью
   const draw = () => {
     let emptyArr = gameBoard.filter((el) => el.state === "");
-    if (emptyArr.length < 1) {
+    if (!emptyArr || emptyArr.length < 1) {
       setWinGame("0.5");
-      return;
+      setBtDis(true);
+      return [];
     }
     return emptyArr;
   };
 
   const restart = () => {
     dispatch(nextBot(nextStart === "bot" ? "player" : "bot"));
-    setWinGame("0");
+    setWinGame(null);
+    setWhoWin(null);
+    setWinStyle(null);
     setCountPlayer("x");
     setGameBoard([...gameBoardEase]);
     setBtDis(false);
@@ -110,6 +134,13 @@ export const GameBoardBot = ({ lvl, navigation }) => {
   return (
     <Flex style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
+        let up = null;
+        if (winStyle) {
+          up =
+            winStyle.find((elem) => {
+              return elem === ind;
+            }) + 1;
+        }
         const square = (
           <TouchableOpacity
             disabled={btDis}
@@ -119,19 +150,23 @@ export const GameBoardBot = ({ lvl, navigation }) => {
               gamePress({ el, ind });
             }}
           >
-            {/* <Text>{el.state}</Text> */}
-            {el.state === "x" && <Ionicons name="close-outline" size={47} color="#d752ff" />}
-            {el.state === "o" && <Ionicons name="ellipse-outline" size={37} color="#45fcaf" />}
+            {el.state === "x" && (
+              <Ionicons name="close-outline" size={up ? 105 : 69} color="#d752ff" />
+            )}
+            {el.state === "o" && (
+              <Ionicons name="ellipse-outline" size={up ? 95 : 61} color="#45fcaf" />
+            )}
           </TouchableOpacity>
         );
         return square;
       })}
-      {winGame !== "0" && (
+      {winGame && (
         <ModalWin
+          whoWin={whoWin}
           winGame={winGame}
           restart={restart}
           navigation={navigation}
-          winPlayer={gameBoard[whoWin[0]].state}
+          letterWin={letterWin}
         />
       )}
     </Flex>
