@@ -13,7 +13,13 @@ export const ModalWin = ({ winGame, restart, navigation, letterWin, whoWin }) =>
       )}
       {winGame === "0.5" && <Text style={styles.title}>It's a draw</Text>}
       <Flex style={styles.butBox}>
-        <Button title="Restart" color="#9b9b9b" style={styles.button} onPress={restart} />
+        <Button
+          tintColor="#004b25"
+          title="Restart"
+          color="#90b1a1"
+          style={styles.button}
+          onPress={restart}
+        />
         <Button
           title="Back to menu"
           color="#9b9b9b"
@@ -27,7 +33,8 @@ export const ModalWin = ({ winGame, restart, navigation, letterWin, whoWin }) =>
 
 const styles = StyleSheet.create({
   conteiner: {
-    top: -110,
+    top: "-30%",
+    paddingBottom: 10,
     position: "absolute",
     backgroundColor: "#d1d1d1",
     borderColor: "#004615",
@@ -39,11 +46,10 @@ const styles = StyleSheet.create({
   },
   butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
   button: {
-    backgroundColor: "#747474",
     borderColor: "#999",
     borderWidth: 1,
   },
-  title: { fontSize: 22, fontWeight: "800", color: "#292929", marginBottom: 20 },
-  loser: { fontSize: 22, fontWeight: "800", color: "#680000", marginBottom: 20 },
-  win: { fontSize: 22, fontWeight: "800", color: "#008f53", marginBottom: 20 },
+  title: { fontSize: 22, fontWeight: "800", color: "#292929", marginBottom: 10 },
+  loser: { fontSize: 22, fontWeight: "800", color: "#680000", marginBottom: 10 },
+  win: { fontSize: 22, fontWeight: "800", color: "#008f53", marginBottom: 10 },
 });

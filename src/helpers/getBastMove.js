@@ -10,23 +10,15 @@ export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
   // бот старается занять углы но только если бот начинал
   if (emptyArr.length > 6) {
     let variants = [0, 2, 6, 8];
-    let x = 3;
-    function recurse() {
-      x = getRandomInt(3);
-      if (gameBoard[variants[x]].state === "") {
-        return;
-      } else {
-        recurse();
-      }
-    }
-    recurse();
-    return { el: gameBoard[variants[x]], ind: variants[x] };
+    const moveSquare = variants.find((el) => gameBoard[el].state === "");
+    return { el: gameBoard[moveSquare], ind: moveSquare };
   }
 
   if (emptyArr.length < 7) {
     // нужно проверить вначале может ли бот выиграть
     const winBot = canWin({ letter, winCombinations, emptyArr, gameBoard });
     if (winBot) {
+      console.log("найдена комб за бота");
       const ind = winBot.find((el) => {
         return gameBoard[el].state === "";
       });
@@ -42,15 +34,17 @@ export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
     });
 
     if (winPlayer) {
+      console.log("найдена комб за игрока");
       const ind = winPlayer.find((el) => gameBoard[el].state === "");
       return { el: gameBoard[ind], ind: ind };
     }
   }
+
   let z = getRandomInt(emptyArr.length - 1);
   return { el: emptyArr[z], ind: emptyArr[z].id - 1 };
 };
 
-const canWin = ({ letter, winCombinations, emptyArr, gameBoard }) => {
+function canWin({ letter, winCombinations, emptyArr, gameBoard }) {
   let winGame = null;
   let arrBoards = []; // массив всех возможных массивов после хода
 
@@ -62,28 +56,28 @@ const canWin = ({ letter, winCombinations, emptyArr, gameBoard }) => {
   // найдем выигранную доску после хода
   const winBoard = arrBoards.find((el) => {
     // запишем выигрывающую линию
-    winGame = findWin({ winCombinations, gameBoard: el, letter });
+    winGame = findWin({ winCombinations, board: el, letter });
     return winGame ? true : null;
   });
   // должен быть массив с выигрывающим результатом или null
   return winGame;
-};
+}
 
 // имитация хода получает букву и возвращает массив
-const move = ({ element, ind, letter, gameBoard }) => {
+function move({ element, ind, letter, gameBoard }) {
   let nextBoard = [...gameBoard];
   const newSquare = { id: element.id, state: letter, move: "bot" };
   nextBoard.splice(ind, 1, newSquare);
   return nextBoard;
-};
+}
 
 // поиск победных линий в конкретной доске
-const findWin = ({ winCombinations, gameBoard, letter }) => {
+function findWin({ winCombinations, board, letter }) {
   const findWin = winCombinations.find(
     (el) =>
-      gameBoard[el[0]].state === letter &&
-      gameBoard[el[1]].state === letter &&
-      gameBoard[el[2]].state === letter
+      board[el[0]].state === letter &&
+      board[el[1]].state === letter &&
+      board[el[2]].state === letter
   );
   return findWin ? findWin : null;
-};
+}

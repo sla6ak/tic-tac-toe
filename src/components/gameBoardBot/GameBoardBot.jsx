@@ -24,6 +24,7 @@ export const GameBoardBot = ({ lvl, navigation }) => {
 
   // при маунте сбрасывает доску в ноль
   useEffect(() => {
+    dispatch(nextBot("player"));
     setGameBoard([...gameBoardEase]);
   }, []);
 
@@ -32,13 +33,10 @@ export const GameBoardBot = ({ lvl, navigation }) => {
     setWhoPlay(nextStart);
   }, [nextStart]);
 
-  // контролирует кто победил
+  //контролирует кто победил
   useEffect(() => {
-    let winG = null;
-    winG = winPlay("x");
-    if (!winG) {
-      winG = winPlay("o");
-    }
+    const letter = countPlayer === "x" ? "o" : "x";
+    let winG = winPlay({ letter });
     if (winG) {
       setBtDis(true);
       setWinStyle(winG);
@@ -50,10 +48,12 @@ export const GameBoardBot = ({ lvl, navigation }) => {
     }
     // если игра продолжается тогда ходит бот
     if (whoPlay === "player") {
+      setBtDis(false);
       return;
     }
-    gamePress(handeleBot());
-  }, [gameBoard]);
+    gamePress(handeleBot({ letter: countPlayer }));
+    setBtDis(false);
+  }, [whoPlay, countPlayer, gameBoard]);
 
   useEffect(() => {
     if (!winStyle) {
@@ -68,7 +68,7 @@ export const GameBoardBot = ({ lvl, navigation }) => {
   }, [winStyle]);
 
   // высщитывает куда походить боту
-  const handeleBot = () => {
+  const handeleBot = ({ letter }) => {
     const emptyArr = draw();
     let res = null;
     let x = null;
@@ -76,7 +76,7 @@ export const GameBoardBot = ({ lvl, navigation }) => {
       x = getRandomInt(emptyArr.length);
       res = { el: emptyArr[x], ind: emptyArr[x].id - 1 };
     } else {
-      res = getBestMove({ letter: countPlayer, gameBoard, emptyArr });
+      res = getBestMove({ letter, gameBoard, emptyArr });
     }
     return res;
   };
@@ -89,22 +89,23 @@ export const GameBoardBot = ({ lvl, navigation }) => {
     if (gameBoard[ind].state !== "") {
       return;
     }
+    setBtDis(true);
     const newSquare = { id: el.id, state: countPlayer, move: whoPlay };
-    setCountPlayer(countPlayer === "x" ? "o" : "x");
-    setWhoPlay(whoPlay === "bot" ? "player" : "bot");
     setGameBoard((prevState) => {
       prevState.splice(ind, 1, newSquare);
       return [...prevState];
     });
+    setCountPlayer(countPlayer === "x" ? "o" : "x");
+    setWhoPlay(whoPlay === "bot" ? "player" : "bot");
   };
 
   // поиск победных позиций
-  const winPlay = (latter) => {
-    const findWin = winCombinations.find(
+  const winPlay = ({ letter }) => {
+    let findWin = winCombinations.find(
       (el) =>
-        gameBoard[el[0]].state === latter &&
-        gameBoard[el[1]].state === latter &&
-        gameBoard[el[2]].state === latter
+        gameBoard[el[0]].state === letter &&
+        gameBoard[el[1]].state === letter &&
+        gameBoard[el[2]].state === letter
     );
     return findWin ? findWin : null;
   };
@@ -141,20 +142,32 @@ export const GameBoardBot = ({ lvl, navigation }) => {
               return elem === ind;
             }) + 1;
         }
+
         const square = (
           <TouchableOpacity
+            delayLongPress={10}
+            delayPressIn={10}
+            onLongPress={() => {
+              gamePress({ el, ind });
+            }}
+            accessibilityRole="button"
             disabled={btDis}
             key={el.id}
             style={styles.button}
-            onPress={() => {
-              gamePress({ el, ind });
-            }}
           >
             {el.state === "x" && (
-              <Ionicons name="close-outline" size={up ? 105 : 69} color="#d752ff" />
+              <Ionicons
+                name="close-outline"
+                size={up ? 57 : 49}
+                color={up ? "#f73791" : "#da60ff"}
+              />
             )}
             {el.state === "o" && (
-              <Ionicons name="ellipse-outline" size={up ? 95 : 61} color="#45fcaf" />
+              <Ionicons
+                name="ellipse-outline"
+                size={up ? 53 : 45}
+                color={up ? "#f73791" : "#45fcaf"}
+              />
             )}
           </TouchableOpacity>
         );

@@ -2,31 +2,29 @@ import { getRandomInt } from "./getRandomInt";
 import { winCombinationsH } from "./winCombinations";
 
 export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
-  // бот старается занять центр
-  if (emptyArr.length > 12) {
-    let variants = [5, 6, 9, 10];
-    let x = 3;
-    function recurse() {
-      x = getRandomInt(3);
-      if (gameBoard[variants[x]].state === "") {
-        return;
-      } else {
-        recurse();
-      }
-    }
-    recurse();
-    const res = { el: { ...gameBoard[variants[x]], move: "bot" }, ind: variants[x] };
+  // бот старается занять центр первые 3 хода
+  if (emptyArr.length >= 12) {
+    let variants = [5, 6, 9, 10, 0, 3, 14, 15];
+    let moveSquare = variants.find((el) => gameBoard[el].state === "");
+    const res = { el: gameBoard[moveSquare], ind: moveSquare };
     return res;
   }
 
-  if (emptyArr.length < 13) {
+  if (emptyArr.length <= 11) {
     // нужно проверить вначале может ли бот выиграть
-    const winBot = canWin({ letter, winCombinationsH, emptyArr, gameBoard });
+    const winBot = canWin({
+      letter,
+      winCombinationsH,
+      emptyArr,
+      gameBoard,
+    });
+
     if (winBot) {
+      console.log("найдена комб за бота");
       const ind = winBot.find((el) => {
         return gameBoard[el].state === "";
       });
-      const res = { el: { ...gameBoard[ind], move: "bot" }, ind: ind };
+      const res = { el: gameBoard[ind], ind: ind };
       return res;
     }
 
@@ -39,17 +37,20 @@ export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
     });
 
     if (winPlayer) {
+      console.log("найдена комб за игрока");
       const ind = winPlayer.find((el) => gameBoard[el].state === "");
-      const res = { el: { ...gameBoard[ind], move: "bot" }, ind: ind };
+      const res = { el: gameBoard[ind], ind: ind };
       return res;
     }
   }
+
   let z = getRandomInt(emptyArr.length - 1);
   const res = { el: { ...emptyArr[z], move: "bot" }, ind: emptyArr[z].id - 1 };
   return res;
 };
 
-const canWin = ({ letter, winCombinationsH, emptyArr, gameBoard }) => {
+function canWin({ letter, winCombinationsH, emptyArr, gameBoard }) {
+  console.log("старт расчетов!:", letter);
   let winGame = null;
   let arrBoards = []; // массив всех возможных массивов после хода
 
@@ -57,33 +58,36 @@ const canWin = ({ letter, winCombinationsH, emptyArr, gameBoard }) => {
   emptyArr.forEach((element) => {
     arrBoards.push(move({ element, ind: element.id - 1, letter, gameBoard }));
   });
-
   // найдем выигранную доску после хода
-  const winBoard = arrBoards.find((el) => {
+  let winBoard = arrBoards.find((el) => {
     // запишем выигрывающую линию
-    winGame = findWin({ winCombinationsH, gameBoard: el, letter });
+    winGame = findWin({ winCombinationsH, board: el, letter });
     return winGame ? true : null;
   });
   // должен быть массив с выигрывающим результатом или null
   return winGame;
-};
+}
 
 // имитация хода получает букву и возвращает массив
-const move = ({ element, ind, letter, gameBoard }) => {
+function move({ element, ind, letter, gameBoard }) {
   let nextBoard = [...gameBoard];
-  const newSquare = { id: element.id, state: letter, move: "bot" };
-  nextBoard.splice(ind, 1, newSquare);
+  nextBoard.splice(ind, 1, {
+    id: element.id,
+    state: letter,
+    move: "bot",
+    point: "искуственный ход",
+  });
   return nextBoard;
-};
+}
 
 // поиск победных линий в конкретной доске
-const findWin = ({ winCombinationsH, gameBoard, letter }) => {
+function findWin({ winCombinationsH, board, letter }) {
   const findWin = winCombinationsH.find(
     (el) =>
-      gameBoard[el[0]].state === letter &&
-      gameBoard[el[1]].state === letter &&
-      gameBoard[el[2]].state === letter &&
-      gameBoard[el[3]].state === letter
+      board[el[0]].state === letter &&
+      board[el[1]].state === letter &&
+      board[el[2]].state === letter &&
+      board[el[3]].state === letter
   );
   return findWin ? findWin : null;
-};
+}

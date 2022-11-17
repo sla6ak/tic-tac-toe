@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { nextBot } from "../../redux/whoStartSlise";
 import { getRandomInt } from "../../helpers/getRandomInt";
 import { getBestMoveH } from "../../helpers/getBastMoveHard";
+import { Timer } from "../timer/Timer";
+const TIME_REGIM = 3;
 
 export const VeryHardBoard = ({ lvl, navigation }) => {
   const [gameBoard, setGameBoard] = useState(gameBoardHard); // { id: "1", state: "", move: "" }
@@ -19,12 +21,15 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
   const [whoWin, setWhoWin] = useState(null); //
   const [winStyle, setWinStyle] = useState(null); // комбинация победная [0, 1, 2]
   const [letterWin, setLetterWin] = useState(""); // 'x' или 'o'
-  const [btDis, setBtDis] = useState(false);
+  const [btDis, setBtDis] = useState(false); // отключает кнопки когда игра окончена
+  const [timeMove, setTimeMove] = useState(9); // старт с 10 секунд а каждый ход по минимуму потом
   const dispatch = useDispatch();
 
   // при маунте сбрасывает доску в ноль
   useEffect(() => {
+    dispatch(nextBot("player"));
     setGameBoard([...gameBoardHard]);
+    setTimeMove(9);
   }, []);
 
   // контролирует начинающего игрока
@@ -34,27 +39,45 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
 
   // контролирует кто победил
   useEffect(() => {
-    let winG = null;
-    winG = winPlay("x");
-    if (!winG) {
-      winG = winPlay("o");
-    }
+    const letter = countPlayer === "x" ? "o" : "x";
+    let winG = winPlay({ letter });
     if (winG) {
       setBtDis(true);
       setWinStyle(winG);
       return;
     }
+
     const stop = draw();
     if (!stop || stop.length < 1) {
       return;
     }
     // если игра продолжается тогда ходит бот
     if (whoPlay === "player") {
+      setBtDis(false);
       return;
     }
-    gamePress(handeleBot());
-  }, [gameBoard]);
+    gamePress(handeleBot({ letter: countPlayer }));
+    setBtDis(false);
+  }, [whoPlay, countPlayer, gameBoard]);
 
+  // имитация хода бота при таймауте
+  useEffect(() => {
+    if (timeMove !== 0) {
+      return;
+    }
+    const emptyArr = draw();
+    const newSquare = { id: emptyArr[0].id, state: "", move: whoPlay };
+    setCountPlayer(countPlayer === "x" ? "o" : "x");
+    setWhoPlay(whoPlay === "bot" ? "player" : "bot");
+    setTimeMove(TIME_REGIM);
+    setGameBoard((prevState) => {
+      prevState.splice(emptyArr[0].id - 1, 1, newSquare);
+      return [...prevState];
+    });
+    return;
+  }, [timeMove]);
+
+  // определяет победителя
   useEffect(() => {
     if (!winStyle) {
       return;
@@ -68,7 +91,7 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
   }, [winStyle]);
 
   // высщитывает куда походить боту
-  const handeleBot = () => {
+  const handeleBot = ({ letter }) => {
     const emptyArr = draw();
     let res = null;
     let x = null;
@@ -76,7 +99,7 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
       x = getRandomInt(emptyArr.length);
       res = { el: emptyArr[x], ind: emptyArr[x].id - 1 };
     } else {
-      res = getBestMoveH({ letter: countPlayer, gameBoard, emptyArr });
+      res = getBestMoveH({ letter, gameBoard, emptyArr });
     }
     return res;
   };
@@ -89,17 +112,19 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
     if (gameBoard[ind].state !== "") {
       return;
     }
+    setBtDis(true);
     const newSquare = { id: el.id, state: countPlayer, move: whoPlay };
-    setCountPlayer(countPlayer === "x" ? "o" : "x");
-    setWhoPlay(whoPlay === "bot" ? "player" : "bot");
     setGameBoard((prevState) => {
       prevState.splice(ind, 1, newSquare);
       return [...prevState];
     });
+    setCountPlayer(countPlayer === "x" ? "o" : "x");
+    setWhoPlay(whoPlay === "bot" ? "player" : "bot");
+    setTimeMove(TIME_REGIM);
   };
 
   // поиск победных позиций
-  const winPlay = (letter) => {
+  const winPlay = ({ letter }) => {
     const findWin = winCombinationsH.find(
       (el) =>
         gameBoard[el[0]].state === letter &&
@@ -129,6 +154,7 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
     setCountPlayer("x");
     setGameBoard([...gameBoardHard]);
     setBtDis(false);
+    setTimeMove(9);
     return;
   };
 
@@ -144,23 +170,36 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
         }
         const square = (
           <TouchableOpacity
+            delayPressIn={10}
+            delayLongPress={10}
+            onLongPress={() => {
+              gamePress({ el, ind });
+            }}
+            accessibilityRole="button"
             disabled={btDis}
             key={el.id}
             style={styles.button}
-            onPress={() => {
-              gamePress({ el, ind });
-            }}
           >
             {el.state === "x" && (
-              <Ionicons name="close-outline" size={up ? 105 : 69} color="#d752ff" />
+              <Ionicons
+                name="close-outline"
+                size={up ? 57 : 49}
+                color={up ? "#f73791" : "#da60ff"}
+              />
             )}
             {el.state === "o" && (
-              <Ionicons name="ellipse-outline" size={up ? 95 : 61} color="#45fcaf" />
+              <Ionicons
+                name="ellipse-outline"
+                size={up ? 53 : 45}
+                color={up ? "#f73791" : "#45fcaf"}
+              />
             )}
           </TouchableOpacity>
         );
+
         return square;
       })}
+      <Timer timerStop={winGame} timeMove={timeMove} setTimeMove={setTimeMove} />
       {winGame && (
         <ModalWin
           whoWin={whoWin}

@@ -96,10 +96,18 @@ export const GameBoard = ({ navigation }) => {
             onPress={() => gamePress(el, ind)}
           >
             {el.state === "x" && (
-              <Ionicons name="close-outline" size={up ? 105 : 69} color="#d752ff" />
+              <Ionicons
+                name="close-outline"
+                size={up ? 57 : 49}
+                color={up ? "#f73791" : "#da60ff"}
+              />
             )}
             {el.state === "o" && (
-              <Ionicons name="ellipse-outline" size={up ? 95 : 61} color="#45fcaf" />
+              <Ionicons
+                name="ellipse-outline"
+                size={up ? 53 : 45}
+                color={up ? "#f73791" : "#45fcaf"}
+              />
             )}
           </TouchableOpacity>
         );
