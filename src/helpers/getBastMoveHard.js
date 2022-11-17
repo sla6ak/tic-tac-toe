@@ -1,15 +1,10 @@
 import { getRandomInt } from "./getRandomInt";
-import { winCombinations } from "./winCombinations";
+import { winCombinationsH } from "./winCombinations";
 
-export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
-  // первым ходом бот старается занять центр
-  if (gameBoard[4].state === "" && emptyArr.length > 6) {
-    return { el: gameBoard[4], ind: 4 };
-  }
-
-  // бот старается занять углы но только если бот начинал
-  if (emptyArr.length > 6) {
-    let variants = [0, 2, 6, 8];
+export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
+  // бот старается занять центр
+  if (emptyArr.length > 12) {
+    let variants = [5, 6, 9, 10];
     let x = 3;
     function recurse() {
       x = getRandomInt(3);
@@ -20,37 +15,41 @@ export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
       }
     }
     recurse();
-    return { el: gameBoard[variants[x]], ind: variants[x] };
+    const res = { el: { ...gameBoard[variants[x]], move: "bot" }, ind: variants[x] };
+    return res;
   }
 
-  if (emptyArr.length < 7) {
+  if (emptyArr.length < 13) {
     // нужно проверить вначале может ли бот выиграть
-    const winBot = canWin({ letter, winCombinations, emptyArr, gameBoard });
+    const winBot = canWin({ letter, winCombinationsH, emptyArr, gameBoard });
     if (winBot) {
       const ind = winBot.find((el) => {
         return gameBoard[el].state === "";
       });
-      return { el: gameBoard[ind], ind: ind };
+      const res = { el: { ...gameBoard[ind], move: "bot" }, ind: ind };
+      return res;
     }
 
     // теперь проверить может ли человек выиграть и помешать ему
     const winPlayer = canWin({
       letter: letter === "x" ? "o" : "x",
-      winCombinations,
+      winCombinationsH,
       emptyArr,
       gameBoard,
     });
 
     if (winPlayer) {
       const ind = winPlayer.find((el) => gameBoard[el].state === "");
-      return { el: gameBoard[ind], ind: ind };
+      const res = { el: { ...gameBoard[ind], move: "bot" }, ind: ind };
+      return res;
     }
   }
   let z = getRandomInt(emptyArr.length - 1);
-  return { el: emptyArr[z], ind: emptyArr[z].id - 1 };
+  const res = { el: { ...emptyArr[z], move: "bot" }, ind: emptyArr[z].id - 1 };
+  return res;
 };
 
-const canWin = ({ letter, winCombinations, emptyArr, gameBoard }) => {
+const canWin = ({ letter, winCombinationsH, emptyArr, gameBoard }) => {
   let winGame = null;
   let arrBoards = []; // массив всех возможных массивов после хода
 
@@ -62,7 +61,7 @@ const canWin = ({ letter, winCombinations, emptyArr, gameBoard }) => {
   // найдем выигранную доску после хода
   const winBoard = arrBoards.find((el) => {
     // запишем выигрывающую линию
-    winGame = findWin({ winCombinations, gameBoard: el, letter });
+    winGame = findWin({ winCombinationsH, gameBoard: el, letter });
     return winGame ? true : null;
   });
   // должен быть массив с выигрывающим результатом или null
@@ -78,12 +77,13 @@ const move = ({ element, ind, letter, gameBoard }) => {
 };
 
 // поиск победных линий в конкретной доске
-const findWin = ({ winCombinations, gameBoard, letter }) => {
-  const findWin = winCombinations.find(
+const findWin = ({ winCombinationsH, gameBoard, letter }) => {
+  const findWin = winCombinationsH.find(
     (el) =>
       gameBoard[el[0]].state === letter &&
       gameBoard[el[1]].state === letter &&
-      gameBoard[el[2]].state === letter
+      gameBoard[el[2]].state === letter &&
+      gameBoard[el[3]].state === letter
   );
   return findWin ? findWin : null;
 };

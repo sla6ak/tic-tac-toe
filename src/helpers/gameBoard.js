@@ -9,3 +9,22 @@ export const gameBoardEase = [
   { id: "8", state: "", move: "" },
   { id: "9", state: "", move: "" },
 ];
+
+export const gameBoardHard = [
+  { id: "1", state: "", move: "" },
+  { id: "2", state: "", move: "" },
+  { id: "3", state: "", move: "" },
+  { id: "4", state: "", move: "" },
+  { id: "5", state: "", move: "" },
+  { id: "6", state: "", move: "" },
+  { id: "7", state: "", move: "" },
+  { id: "8", state: "", move: "" },
+  { id: "9", state: "", move: "" },
+  { id: "10", state: "", move: "" },
+  { id: "11", state: "", move: "" },
+  { id: "12", state: "", move: "" },
+  { id: "13", state: "", move: "" },
+  { id: "14", state: "", move: "" },
+  { id: "15", state: "", move: "" },
+  { id: "16", state: "", move: "" },
+];

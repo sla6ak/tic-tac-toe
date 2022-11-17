@@ -3,13 +3,18 @@ import { Flex } from "react-native-flex-layout";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { GameBoardBot } from "../components/gameBoardBot/GameBoardBot";
+import { VeryHardBoard } from "../components/veryHardBoard/VeryHardBoard";
 
 const OnePlGame = ({ route, navigation }) => {
   const { lvl } = route.params;
   return (
     <Flex fill center style={styles.conteiner}>
       <Text style={styles.title}>Game vs {lvl.toUpperCase()} bot</Text>
-      <GameBoardBot lvl={lvl} navigation={navigation} />
+      {lvl === "veryHard" ? (
+        <VeryHardBoard navigation={navigation} />
+      ) : (
+        <GameBoardBot lvl={lvl} navigation={navigation} />
+      )}
     </Flex>
   );
 };

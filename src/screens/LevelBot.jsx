@@ -19,6 +19,11 @@ const LevelBot = ({ navigation }) => {
         title="Hard lvl"
         onPress={() => navigation.navigate("GameOne", { lvl: "hard" })}
       />
+      <Button
+        style={styles.buttonHard}
+        title="Very hard lvl"
+        onPress={() => navigation.navigate("GameOne", { lvl: "veryHard" })}
+      />
     </Flex>
   );
 };
@@ -32,6 +37,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 30,
+  },
+  buttonHard: {
+    marginBottom: 30,
+    backgroundColor: "#614e4e",
   },
 });
 export default LevelBot;
