@@ -19,7 +19,7 @@ const Routers = () => {
             headerStyle: {
               backgroundColor: "#353535",
             },
-            headerTintColor: "#fff",
+            headerTintColor: "#8fdcff",
             headerTitleStyle: {
               fontWeight: "bold",
             },

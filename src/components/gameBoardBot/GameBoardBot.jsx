@@ -51,9 +51,13 @@ export const GameBoardBot = ({ lvl, navigation }) => {
       setBtDis(false);
       return;
     }
+    if (winGame) {
+      setBtDis(false);
+      return;
+    }
     gamePress(handeleBot({ letter: countPlayer }));
     setBtDis(false);
-  }, [whoPlay, countPlayer, gameBoard]);
+  }, [whoPlay, countPlayer, gameBoard, winGame]);
 
   useEffect(() => {
     if (!winStyle) {

@@ -20,7 +20,6 @@ export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
     });
 
     if (winBot) {
-      console.log("найдена комб за бота");
       const ind = winBot.find((el) => {
         return gameBoard[el].state === "";
       });
@@ -37,7 +36,6 @@ export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
     });
 
     if (winPlayer) {
-      console.log("найдена комб за игрока");
       const ind = winPlayer.find((el) => gameBoard[el].state === "");
       const res = { el: gameBoard[ind], ind: ind };
       return res;
@@ -50,7 +48,6 @@ export const getBestMoveH = ({ letter, gameBoard, emptyArr }) => {
 };
 
 function canWin({ letter, winCombinationsH, emptyArr, gameBoard }) {
-  console.log("старт расчетов!:", letter);
   let winGame = null;
   let arrBoards = []; // массив всех возможных массивов после хода
 

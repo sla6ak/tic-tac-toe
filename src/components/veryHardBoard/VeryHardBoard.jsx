@@ -56,9 +56,13 @@ export const VeryHardBoard = ({ lvl, navigation }) => {
       setBtDis(false);
       return;
     }
+    if (winGame) {
+      setBtDis(false);
+      return;
+    }
     gamePress(handeleBot({ letter: countPlayer }));
     setBtDis(false);
-  }, [whoPlay, countPlayer, gameBoard]);
+  }, [whoPlay, countPlayer, gameBoard, winGame]);
 
   // имитация хода бота при таймауте
   useEffect(() => {

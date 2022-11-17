@@ -18,7 +18,6 @@ export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
     // нужно проверить вначале может ли бот выиграть
     const winBot = canWin({ letter, winCombinations, emptyArr, gameBoard });
     if (winBot) {
-      console.log("найдена комб за бота");
       const ind = winBot.find((el) => {
         return gameBoard[el].state === "";
       });
@@ -34,7 +33,6 @@ export const getBestMove = ({ letter, gameBoard, emptyArr }) => {
     });
 
     if (winPlayer) {
-      console.log("найдена комб за игрока");
       const ind = winPlayer.find((el) => gameBoard[el].state === "");
       return { el: gameBoard[ind], ind: ind };
     }
