@@ -17,7 +17,9 @@ const LevelBot = ({ navigation }) => {
         color="#9b9b9b"
         style={styles.button}
         title="Hard lvl"
-        onPress={() => navigation.navigate("GameOne", { lvl: "hard" })}
+        onPress={() => {
+          navigation.navigate("GameOne", { lvl: "hard" });
+        }}
       />
       <Button
         style={styles.buttonHard}
