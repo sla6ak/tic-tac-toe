@@ -13,13 +13,13 @@ const HomeScreen = ({ navigation }) => {
           color="#9c9c9c"
           style={styles.button}
           title="One player"
-          onPress={() => navigation.navigate("Level")}
+          onPress={() => navigation.navigate("Bot")}
         />
         <Button
           color="#9b9b9b"
           style={styles.button}
           title="Two player"
-          onPress={() => navigation.navigate("GameTwo")}
+          onPress={() => navigation.navigate("Player")}
         />
         <StatusBar style="auto" />
       </Box>

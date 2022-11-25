@@ -39,16 +39,16 @@ class gameBoardClass {
   getWinCombinationBigBoard = () => {
     const winCombinationLong = this.calculatorWinPosition(this.getBigBoard());
     const winCombination = [
+      [1, 7, 13, 19],
+      [3, 7, 11, 15],
+      [5, 11, 17, 23],
+      [9, 13, 17, 21],
       ...winCombinationLong.map((el) => {
         el.splice(0, 1);
       }),
       ...winCombinationLong.map((el) => {
         el.splice(4, 1);
       }),
-      [1, 7, 13, 19],
-      [3, 7, 11, 15],
-      [5, 11, 17, 23],
-      [9, 13, 17, 21],
     ];
     return winCombination;
   };

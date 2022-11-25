@@ -1,9 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
-import OnePlGame from "../screens/OnePlGame";
-import TwoPlGame from "../screens/TwoPlGame";
-import LevelBot from "../screens/LevelBot";
+import BotSetting from "../screens/BotSetting";
+import StartGame from "../screens/StartGame";
+import PlayerSetting from "../screens/PlayerSetting";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,10 +26,10 @@ const Routers = () => {
           }}
         />
         <Stack.Screen
-          name="GameTwo"
-          component={TwoPlGame}
+          name="Bot"
+          component={BotSetting}
           options={{
-            title: "Back to menu",
+            title: "Back",
             headerStyle: {
               backgroundColor: "#353535",
             },
@@ -40,10 +40,10 @@ const Routers = () => {
           }}
         />
         <Stack.Screen
-          name="GameOne"
-          component={OnePlGame}
+          name="Player"
+          component={PlayerSetting}
           options={{
-            title: "Back to lvl",
+            title: "Back",
             headerStyle: {
               backgroundColor: "#353535",
             },
@@ -54,10 +54,10 @@ const Routers = () => {
           }}
         />
         <Stack.Screen
-          name="Level"
-          component={LevelBot}
+          name="Start"
+          component={StartGame}
           options={{
-            title: "Back to menu",
+            title: "Back",
             headerStyle: {
               backgroundColor: "#353535",
             },
