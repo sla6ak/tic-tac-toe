@@ -23,7 +23,7 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
       clearTimeout(ping);
     }
     let newPing = setTimeout(() => {
-      setTimeMove(timeMove - 1);
+      setTimeMove((prevT) => prevT - 1);
     }, 1000);
     setPing(newPing);
   }, [timeMove]);
@@ -34,38 +34,25 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
       return;
     }
     if (timeMove < 3) {
-      setColorTime("#f86604");
+      setColorTime("#f8ab04");
       return;
     }
     if (timeMove < 4) {
-      setColorTime("#f3c21f");
-      return;
-    }
-    if (timeMove < 5) {
       setColorTime("#a2e22c");
       return;
     }
-    if (timeMove < 6) {
-      setColorTime("#22da4a");
-      return;
-    }
-    if (timeMove < 7) {
-      setColorTime("#80f794");
-      return;
-    }
-    if (timeMove < 8) {
-      setColorTime("#b1ffbe");
-      return;
-    }
-    if (timeMove > 7) {
-      setColorTime("#beffff");
+    if (timeMove > 3) {
+      setColorTime("#a2e5ff");
       return;
     }
   }, [timeMove]);
 
   return (
     <Flex center style={styles.conteiner}>
-      <Text style={{ fontSize: 38, fontWeight: "800", color: colorTime }}>0{timeMove} :left</Text>
+      <Text style={{ fontSize: 38, fontWeight: "800", color: colorTime }}>
+        0{timeMove}
+        <Text style={{ fontSize: 28, fontWeight: "400", color: colorTime }}>:left</Text>
+      </Text>
     </Flex>
   );
 };

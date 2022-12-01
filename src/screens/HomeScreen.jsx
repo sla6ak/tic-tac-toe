@@ -1,6 +1,5 @@
 import { Text, StatusBar } from "react-native";
-import { Button, Box } from "@react-native-material/core";
-import { Flex } from "react-native-flex-layout";
+import { Button, Box, Flex } from "@react-native-material/core";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#ffffff",
+    color: "#89dbc9",
     marginBottom: 20,
   },
   button: {

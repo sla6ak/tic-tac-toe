@@ -1,4 +1,4 @@
-class getBastMove {
+class getBestMove {
   constructor() {
     this.n = 0;
   }
@@ -10,6 +10,33 @@ class getBastMove {
   };
 
   getMoveLvl2 = ({ letter, winCombinations, emptyArr, gameBoard }) => {
+    // ручной ввод ходов 3*3
+    if (gameBoard.length === 9) {
+      if (emptyArr.length > 7) {
+        const res = emptyArr.find((el) => el.id === 5);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 4*4
+    if (gameBoard.length === 16) {
+      if (emptyArr.length > 14) {
+        const arr = [6, 7, 10, 11, 0];
+        const x = arr[this.getRandomInt(4)];
+        const res = emptyArr.find((el) => el.id === x);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 5*5
+    if (gameBoard.length === 25) {
+      const res = emptyArr.find((el) => el.id === 13);
+      if (res) {
+        return { el: res.id, ind: res.id - 1 };
+      }
+    }
     // нужно проверить вначале может ли бот выиграть
     const winBot = this.canWin({
       variable: false,
@@ -22,11 +49,38 @@ class getBastMove {
       const ind = winBot.find((el) => gameBoard[el].letter === "");
       return { el: gameBoard[ind], ind: ind };
     }
-    const elseMove = this.getMoveLvl1();
+    const elseMove = this.getMoveLvl1({ emptyArr });
     return elseMove;
   };
 
   getMoveLvl3 = ({ letter, winCombinations, emptyArr, gameBoard }) => {
+    // ручной ввод ходов 3*3
+    if (gameBoard.length === 9) {
+      if (emptyArr.length > 7) {
+        const res = emptyArr.find((el) => el.id === 5);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 4*4
+    if (gameBoard.length === 16) {
+      if (emptyArr.length > 14) {
+        const arr = [6, 7, 10, 11, 0];
+        const x = arr[this.getRandomInt(4)];
+        const res = emptyArr.find((el) => el.id === x);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 5*5
+    if (gameBoard.length === 25) {
+      const res = emptyArr.find((el) => el.id === 13);
+      if (res) {
+        return { el: res.id, ind: res.id - 1 };
+      }
+    }
     // нужно проверить вначале может ли бот выиграть
     const winBot = this.canWin({
       variable: false,
@@ -51,11 +105,38 @@ class getBastMove {
       const ind = winPlayer.find((el) => gameBoard[el].letter === "");
       return { el: gameBoard[ind], ind: ind };
     }
-    const elseMove = this.getMoveLvl1();
+    const elseMove = this.getMoveLvl1({ emptyArr });
     return elseMove;
   };
 
   getMoveLvl4 = ({ letter, winCombinations, emptyArr, gameBoard }) => {
+    // ручной ввод ходов 3*3
+    if (gameBoard.length === 9) {
+      if (emptyArr.length > 7) {
+        const res = emptyArr.find((el) => el.id === 5);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 4*4
+    if (gameBoard.length === 16) {
+      if (emptyArr.length > 14) {
+        const arr = [6, 7, 10, 11, 0];
+        const x = arr[this.getRandomInt(4)];
+        const res = emptyArr.find((el) => el.id === x);
+        if (res) {
+          return { el: res.id, ind: res.id - 1 };
+        }
+      }
+    }
+    // ручной ввод ходов 5*5
+    if (gameBoard.length === 25) {
+      const res = emptyArr.find((el) => el.id === 13);
+      if (res) {
+        return { el: res.id, ind: res.id - 1 };
+      }
+    }
     // нужно проверить вначале может ли бот выиграть
     const winBot = this.canWin({
       variable: false,
@@ -89,10 +170,11 @@ class getBastMove {
       gameBoard,
     });
     if (isWinBot) {
+      console.log("проверяем варианты:", isWinBot);
       const ind = isWinBot.find((el) => gameBoard[el].letter === "");
       return { el: gameBoard[ind], ind: ind };
     }
-    const elseMove = this.getMoveLvl1();
+    const elseMove = this.getMoveLvl1({ emptyArr });
     return elseMove;
   };
 
@@ -102,13 +184,13 @@ class getBastMove {
 
     // создадим N массивов из доступных клеток
     emptyArr.forEach((element) => {
-      arrBoards.push(move({ element, ind: element.id - 1, letter, gameBoard }));
+      arrBoards.push(this.move({ element, ind: element.id - 1, letter, gameBoard }));
     });
     if (variable) {
       // найдем выигранную позицию после хода
-      const winBoard = arrBoards.findVariableWin((el) => {
+      const winBoard = arrBoards.find((el) => {
         // запишем выигрывающую линию
-        findPosition = this.findWin({ winCombinations, board: el, letter });
+        findPosition = this.findWinVariable({ winCombinations, board: el, letter });
         return findPosition ? true : null;
       });
     }
@@ -154,8 +236,8 @@ class getBastMove {
       return findWin ? findWin : null;
     }
   };
-
-  findVariableWin = ({ winCombinations, board, letter }) => {
+  // поиск победных линий (3 в ряд) в конкретной доске
+  findWinVariable = ({ winCombinations, board, letter }) => {
     if (winCombinations[0].length === 3) {
       const findWin = winCombinations.find(
         (el) =>
@@ -181,3 +263,5 @@ class getBastMove {
     return Math.floor(Math.random() * max);
   };
 }
+
+export default new getBestMove();

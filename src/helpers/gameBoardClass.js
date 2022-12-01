@@ -4,6 +4,23 @@ class gameBoardClass {
     this.counter = 0;
     this.counterPrived = 0;
   }
+
+  getSizeBoard = (sizeBoard) => {
+    if (sizeBoard === 3) {
+      const board = this.getSmallBoard();
+      return board;
+    }
+    if (sizeBoard === 4) {
+      const board = this.getMiddleBoard();
+      return board;
+    }
+    if (sizeBoard === 5) {
+      const board = this.getBigBoard();
+      return board;
+    }
+    return null;
+  };
+
   getSmallBoard = () => {
     let smallBoard = [];
     for (this.counter = 1; this.counter <= 9; this.counter += 1) {
@@ -28,6 +45,22 @@ class gameBoardClass {
     }
     return bigBoard;
   };
+
+  getSizeWinCombination = (sizeBoard) => {
+    if (sizeBoard === 3) {
+      const board = this.getWinCombinationSmallBoard();
+      return board;
+    }
+    if (sizeBoard === 4) {
+      const board = this.getWinCombinationMiddleBoard();
+      return board;
+    }
+    if (sizeBoard === 5) {
+      const board = this.getWinCombinationBigBoard();
+      return board;
+    }
+  };
+
   getWinCombinationSmallBoard = () => {
     const winCombination = this.calculatorWinPosition(this.getSmallBoard());
     return winCombination;
@@ -38,17 +71,23 @@ class gameBoardClass {
   };
   getWinCombinationBigBoard = () => {
     const winCombinationLong = this.calculatorWinPosition(this.getBigBoard());
+    let startShort = winCombinationLong.map((el) => {
+      const newEl = [...el];
+      newEl.splice(0, 1);
+      return newEl;
+    });
+    let endShort = winCombinationLong.map((el) => {
+      const newEl = [...el];
+      newEl.splice(4, 1);
+      return newEl;
+    });
     const winCombination = [
       [1, 7, 13, 19],
       [3, 7, 11, 15],
       [5, 11, 17, 23],
       [9, 13, 17, 21],
-      ...winCombinationLong.map((el) => {
-        el.splice(0, 1);
-      }),
-      ...winCombinationLong.map((el) => {
-        el.splice(4, 1);
-      }),
+      ...startShort,
+      ...endShort,
     ];
     return winCombination;
   };
@@ -61,7 +100,6 @@ class gameBoardClass {
     let diagonal = [];
     let gorizontal = [];
     let vertical = [];
-    const arrBoard = this.getVeryBigBoard();
 
     // всегда вернет массив из 2х эл
     // ищем элементы с шагом +1
@@ -116,7 +154,7 @@ class gameBoardClass {
         })()
       );
     }
-    let winCombination = [diagonal, vertical, gorizontal];
+    let winCombination = [...diagonal, ...vertical, ...gorizontal];
     return winCombination;
   };
 }

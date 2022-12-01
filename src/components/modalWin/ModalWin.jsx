@@ -3,40 +3,41 @@ import { Text, Button } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
 import { StyleSheet, Dimensions } from "react-native";
 
-export const ModalWin = ({ winGame, restart, navigation, letterWin, whoWin }) => {
+export const ModalWin = ({ winGame, restart, navigation }) => {
   return (
     <Flex center style={styles.conteiner}>
-      {winGame === "1" && (
-        <Text style={whoWin === "player" ? styles.win : styles.loser}>
-          {whoWin ? whoWin.toUpperCase() : letterWin.toUpperCase()} won!
+      {winGame.result === "win" && (
+        <Text style={winGame.nameWin === "bot" ? styles.loser : styles.win}>
+          {winGame.nameWin.toUpperCase()}: {winGame.winLetter.toUpperCase()} won!
         </Text>
       )}
-      {winGame === "0.5" && <Text style={styles.title}>It's a draw</Text>}
+      {winGame.result === "drow" && <Text style={styles.drow}>It's a draw</Text>}
       <Flex style={styles.butBox}>
         <Button
-          tintColor="#004b25"
+          tintColor="#ffffff"
           title="Restart"
-          color="#90b1a1"
+          color="#006141ae"
           style={styles.button}
           onPress={restart}
         />
         <Button
-          title="Back to menu"
-          color="#9b9b9b"
+          title="Show me reclama!"
+          tintColor="#ffffff"
+          color="#007888a7"
           style={styles.button}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => {}}
         />
       </Flex>
+      <Text style={styles.please}>* Please watch more reclams to help developer game!</Text>
     </Flex>
   );
 };
 
 const styles = StyleSheet.create({
   conteiner: {
-    top: "-30%",
     paddingBottom: 10,
     position: "absolute",
-    backgroundColor: "#d1d1d1",
+    backgroundColor: "#d1d1d12b",
     borderColor: "#004615",
     borderWidth: 1,
     borderRadius: 10,
@@ -44,12 +45,20 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width * 0.25,
     flexDirection: "column",
   },
-  butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
+  please: {
+    textAlign: "center",
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#292929",
+    marginTop: 10,
+  },
   button: {
     borderColor: "#999",
     borderWidth: 1,
   },
-  title: { fontSize: 22, fontWeight: "800", color: "#292929", marginBottom: 10 },
+  butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
+  drow: { fontSize: 22, fontWeight: "800", color: "#202020", marginBottom: 10 },
   loser: { fontSize: 22, fontWeight: "800", color: "#680000", marginBottom: 10 },
-  win: { fontSize: 22, fontWeight: "800", color: "#008f53", marginBottom: 10 },
+  win: { fontSize: 22, fontWeight: "800", color: "#00ff9d", marginBottom: 10 },
 });
