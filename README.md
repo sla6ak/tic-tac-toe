@@ -46,5 +46,5 @@ Tic Tac Toe vs Bot
 shorts:
 The Tic-Tac-Toe app has a complex bot. Have a nice game.
 full:
-The Tic-Tac-Toe app has different game levels and a complex bot
-you can also complicate the game by choosing other board sizes, such as 4*4 or 5*5. In difficult levels there is a timer for each move, if you hesitate the bot makes a move out of turn! Have a nice game.
+Tic Tac Toe app has different game levels and complex bot
+You can also make the game more difficult by choosing other board sizes, such as 4*4 or 5*5. If you do not lose to the bot, you can choose a timer, this will give the game new emotions! If you hesitate, the bot makes a move out of turn! Have a nice game.

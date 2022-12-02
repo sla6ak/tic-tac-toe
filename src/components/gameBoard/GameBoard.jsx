@@ -33,13 +33,13 @@ const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination 
         }
         const square = (
           <TouchableOpacity
+            key={el.id}
             delayPressIn={30}
             delayLongPress={30}
             onLongPress={() => {
               gamePress({ el, ind });
             }}
             disabled={btDis}
-            key={el.id}
             style={{
               backgroundColor: "#555",
               borderColor: "#999",

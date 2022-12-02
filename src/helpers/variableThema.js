@@ -5,5 +5,5 @@ export const variableThema = {
   easy: "#59fc74",
   normal: "#59b3fc",
   hard: "#fcde59",
-  imposible: "#fc597d",
+  impossible: "#fc597d",
 };

@@ -1,11 +1,18 @@
 import { Flex, Text } from "@react-native-material/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { variableThema } from "../helpers/variableThema";
 
 const BotSetting = ({ navigation }) => {
   const [timer, setTimer] = useState("");
   const [lvl, setLvl] = useState("easy");
+  const [sizeFont, setSizeFont] = useState(16);
+  useEffect(() => {
+    const window = Dimensions.get("window");
+    if (window.width < 430) {
+      setSizeFont(12);
+    }
+  }, []);
 
   const colorTimer = () => {
     if (timer === "5s") {
@@ -37,9 +44,10 @@ const BotSetting = ({ navigation }) => {
             onPress={() => setLvl("easy")}
           />
           <Text
+            variant="body2"
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.easy,
             }}
@@ -61,9 +69,10 @@ const BotSetting = ({ navigation }) => {
             onPress={() => setLvl("normal")}
           />
           <Text
+            variant="body2"
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.normal,
             }}
@@ -85,9 +94,10 @@ const BotSetting = ({ navigation }) => {
             onPress={() => setLvl("hard")}
           />
           <Text
+            variant="body2"
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.hard,
             }}
@@ -100,23 +110,24 @@ const BotSetting = ({ navigation }) => {
             style={{
               width: 35,
               height: 35,
-              backgroundColor: lvl === "imposible" ? variableThema.imposible : "#444",
+              backgroundColor: lvl === "impossible" ? variableThema.imposible : "#444",
               borderRadius: 20,
               borderColor: "#777",
               borderWidth: 5,
               marginLeft: 40,
             }}
-            onPress={() => setLvl("imposible")}
+            onPress={() => setLvl("impossible")}
           />
           <Text
+            variant="body2"
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.imposible,
             }}
           >
-            imposible
+            impossible
           </Text>
         </Flex>
       </Flex>
@@ -151,7 +162,7 @@ const BotSetting = ({ navigation }) => {
           <Text
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.easy,
             }}
@@ -176,7 +187,7 @@ const BotSetting = ({ navigation }) => {
           <Text
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.normal,
             }}
@@ -201,7 +212,7 @@ const BotSetting = ({ navigation }) => {
           <Text
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.hard,
             }}
@@ -226,7 +237,7 @@ const BotSetting = ({ navigation }) => {
           <Text
             style={{
               textAlign: "center",
-              fontSize: 16,
+              fontSize: sizeFont,
               fontWeight: "600",
               color: variableThema.imposible,
             }}

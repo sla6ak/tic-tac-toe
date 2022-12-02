@@ -90,7 +90,7 @@ const StartGame = ({ route, navigation }) => {
       res = getBestMove.getMoveLvl2({ letter, winCombinations, gameBoard, emptyArr });
     } else if (lvl === "hard") {
       res = getBestMove.getMoveLvl3({ letter, winCombinations, gameBoard, emptyArr });
-    } else if (lvl === "imposible") {
+    } else if (lvl === "impossible") {
       res = getBestMove.getMoveLvl4({ letter, winCombinations, gameBoard, emptyArr });
     }
     return res;
