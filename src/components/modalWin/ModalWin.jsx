@@ -28,7 +28,6 @@ export const ModalWin = ({ winGame, restart, navigation }) => {
           onPress={() => {}}
         />
       </Flex>
-      <Text style={styles.please}>* Please watch more reclams to help developer game!</Text>
     </Flex>
   );
 };
@@ -37,12 +36,9 @@ const styles = StyleSheet.create({
   conteiner: {
     paddingBottom: 10,
     position: "absolute",
-    backgroundColor: "#d1d1d12b",
-    borderColor: "#004615",
-    borderWidth: 1,
-    borderRadius: 10,
+    backgroundColor: "transparent",
     width: Dimensions.get("window").width * 0.85,
-    height: Dimensions.get("window").width * 0.25,
+    height: Dimensions.get("window").height * 0.17,
     flexDirection: "column",
   },
   please: {
@@ -50,15 +46,15 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     fontWeight: "400",
-    color: "#292929",
-    marginTop: 10,
+    color: "#44006b",
+    marginTop: Dimensions.get("window").height * 0.09,
   },
   button: {
     borderColor: "#999",
     borderWidth: 1,
   },
   butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
-  drow: { fontSize: 22, fontWeight: "800", color: "#202020", marginBottom: 10 },
-  loser: { fontSize: 22, fontWeight: "800", color: "#680000", marginBottom: 10 },
-  win: { fontSize: 22, fontWeight: "800", color: "#00ff9d", marginBottom: 10 },
+  drow: { fontSize: 28, fontWeight: "800", color: "#202020", marginBottom: 30 },
+  loser: { fontSize: 28, fontWeight: "800", color: "#ff3370", marginBottom: 30 },
+  win: { fontSize: 28, fontWeight: "800", color: "#00ff9d", marginBottom: 30 },
 });

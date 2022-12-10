@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 30,
     minWidth: Dimensions.get("window").width * 0.5,
-    minHeight: Dimensions.get("window").width * 0.07,
+    minHeight: Dimensions.get("window").height * 0.06,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

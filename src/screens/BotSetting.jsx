@@ -29,7 +29,7 @@ const BotSetting = ({ navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      <Text style={styles.title}>Adjust the bot level:</Text>
+      <Text style={styles.title}>Adjust the bot level</Text>
       <Flex direction="row" style={styles.boxLvl}>
         <Flex center fill>
           <TouchableOpacity
@@ -110,7 +110,7 @@ const BotSetting = ({ navigation }) => {
             style={{
               width: 35,
               height: 35,
-              backgroundColor: lvl === "impossible" ? variableThema.imposible : "#444",
+              backgroundColor: lvl === "impossible" ? variableThema.impossible : "#444",
               borderRadius: 20,
               borderColor: "#777",
               borderWidth: 5,
@@ -124,7 +124,7 @@ const BotSetting = ({ navigation }) => {
               textAlign: "center",
               fontSize: sizeFont,
               fontWeight: "600",
-              color: variableThema.imposible,
+              color: variableThema.impossible,
             }}
           >
             impossible
@@ -132,7 +132,7 @@ const BotSetting = ({ navigation }) => {
         </Flex>
       </Flex>
 
-      <Text style={styles.title}>Adjust the timer:</Text>
+      <Text style={styles.title}>Adjust the timer</Text>
       {/* <Text
         style={{
           fontSize: 18,
@@ -226,7 +226,7 @@ const BotSetting = ({ navigation }) => {
             style={{
               width: 35,
               height: 35,
-              backgroundColor: timer === "1s" ? variableThema.imposible : "#444",
+              backgroundColor: timer === "1s" ? variableThema.impossible : "#444",
               borderRadius: 20,
               borderColor: "#777",
               borderWidth: 5,
@@ -239,7 +239,7 @@ const BotSetting = ({ navigation }) => {
               textAlign: "center",
               fontSize: sizeFont,
               fontWeight: "600",
-              color: variableThema.imposible,
+              color: variableThema.impossible,
             }}
           >
             1s
@@ -247,7 +247,7 @@ const BotSetting = ({ navigation }) => {
         </Flex>
       </Flex>
 
-      <Text style={styles.start}>Start game:</Text>
+      <Text style={styles.start}>Start game</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Start", { lvl, sizeBoard: 3, startTimer: timer })}
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "800",
     color: "#89dbc9",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   helperText: {},
 
@@ -287,15 +287,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 30,
     minWidth: Dimensions.get("window").width * 0.5,
-    minHeight: Dimensions.get("window").width * 0.07,
+    minHeight: Dimensions.get("window").height * 0.06,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
   boxLvl: {
-    marginBottom: 30,
+    marginBottom: Dimensions.get("window").height * 0.01,
     minWidth: Dimensions.get("window").width * 0.7,
-    minHeight: Dimensions.get("window").width * 0.15,
+    minHeight: Dimensions.get("window").height * 0.15,
   },
   start: {
     fontSize: 22,

@@ -10,6 +10,9 @@ import { ModalWin } from "../components/modalWin/ModalWin";
 import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
 
+// import { InterstitialAd, AdEventType, TestIds } from "react-native-google-mobile-ads";
+// const adUnitId = TestIds.INTERSTITIAL;
+
 const StartGame = ({ route, navigation }) => {
   const initialWinInfo = {
     result: "",
@@ -25,12 +28,21 @@ const StartGame = ({ route, navigation }) => {
   const [winGame, setWinGame] = useState(initialWinInfo); // инфо о завершении игры
   const [btDis, setBtDis] = useState(false);
   const [timeMove, setTimeMove] = useState(9);
+  const [timerStop, setTimerStop] = useState(false);
   const [whoStart, setWhoStart] = useState("player");
   const [counter, setCounter] = useState({ player: 0, bot: 0 });
 
+  // реклама*************************************
+  // const [loadedReclama, setLoadedReclama] = useState(false);
   // useEffect(() => {
-  //   console.log(winCombinations);
-  // }, [winCombinations]);
+  //   const interstitial = InterstitialAd.createForAdRequest(adUnitId);
+  //   const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+  //     setLoadedReclama(true);
+  //   });
+  //   interstitial.load();
+  //   return unsubscribe;
+  // }, []);
+  // ******************************************
 
   // при старте игры создаем доску
   useEffect(() => {
@@ -60,10 +72,14 @@ const StartGame = ({ route, navigation }) => {
         nameWin: nameW,
         winCombination: winG,
       });
+      setTimerStop(true);
       return;
     }
     //
     const stop = draw();
+    if (stop.length === gameBoard.length - 1 && whoStart === "bot") {
+      setTimeMove(9);
+    }
     if (!stop || stop.length < 1) {
       return;
     }
@@ -98,25 +114,29 @@ const StartGame = ({ route, navigation }) => {
 
   // событие нажатия
   const gamePress = ({ el, ind }) => {
-    if (gameBoard[ind].letter !== "") {
-      return;
-    }
-    if (timeMove === 0) {
-      return;
-    }
-    const newSquare = { id: el.id, letter: turnLetter, move: turnName };
-    setGameBoard((prevState) => {
-      prevState.splice(ind, 1, newSquare);
-      return [...prevState];
-    });
-    autoSetPing();
-    setTurnLetter((prevL) => (prevL === "x" ? "o" : "x"));
-    setTurnName((prevN) => {
-      if (lvl) {
-        return prevN === "player" ? "bot" : "player";
+    try {
+      if (gameBoard[ind].letter !== "") {
+        return;
       }
-      return "player";
-    });
+      if (timeMove === 0) {
+        return;
+      }
+      const newSquare = { id: el.id, letter: turnLetter, move: turnName };
+      setGameBoard((prevState) => {
+        prevState.splice(ind, 1, newSquare);
+        return [...prevState];
+      });
+      autoSetPing();
+      setTurnLetter((prevL) => (prevL === "x" ? "o" : "x"));
+      setTurnName((prevN) => {
+        if (lvl) {
+          return prevN === "player" ? "bot" : "player";
+        }
+        return "player";
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // имитация хода бота при таймауте
@@ -153,6 +173,7 @@ const StartGame = ({ route, navigation }) => {
         nameWin: "",
         winCombination: null,
       });
+      setTimerStop(true);
       setCounter((prevW) => {
         return { bot: prevW.bot + 0.5, player: prevW.player + 0.5 };
       });
@@ -164,10 +185,11 @@ const StartGame = ({ route, navigation }) => {
 
   // сбрасываем все настройки на стартовые
   const restart = () => {
-    setTimeMove(9);
+    setTimerStop(false);
     setWinGame(initialWinInfo);
     setTurnLetter("x");
     setGameBoard(() => gameBoardClass.getSizeBoard(sizeBoard));
+    setTimeMove(9);
     setBtDis(false);
     if (lvl) {
       setTurnName(whoStart === "bot" ? "player" : "bot");
@@ -210,11 +232,19 @@ const StartGame = ({ route, navigation }) => {
         />
       )}
       {startTimer !== "" && (
-        <Timer timeMove={timeMove} setTimeMove={setTimeMove} startTimer={startTimer} />
+        <Timer timeMove={timeMove} setTimeMove={setTimeMove} timerStop={timerStop} />
       )}
       {winGame.result !== "" && (
         <ModalWin winGame={winGame} restart={restart} navigation={navigation} />
       )}
+      {/* {loadedReclama && (
+        <Button
+          title="Show Interstitial"
+          onPress={() => {
+            interstitial.show();
+          }}
+        />
+      )} */}
     </Flex>
   );
 };
