@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Text, Flex } from "@react-native-material/core";
+import { Text, Flex, Button } from "@react-native-material/core";
 import React, { useEffect, useState } from "react";
 import { variableThema } from "../helpers/variableThema";
 import { Timer } from "../components/timer/Timer";
@@ -9,9 +9,6 @@ import GameBoard from "../components/gameBoard/GameBoard";
 import { ModalWin } from "../components/modalWin/ModalWin";
 import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
-
-// import { InterstitialAd, AdEventType, TestIds } from "react-native-google-mobile-ads";
-// const adUnitId = TestIds.INTERSTITIAL;
 
 const StartGame = ({ route, navigation }) => {
   const initialWinInfo = {
@@ -31,18 +28,6 @@ const StartGame = ({ route, navigation }) => {
   const [timerStop, setTimerStop] = useState(false);
   const [whoStart, setWhoStart] = useState("player");
   const [counter, setCounter] = useState({ player: 0, bot: 0 });
-
-  // реклама*************************************
-  // const [loadedReclama, setLoadedReclama] = useState(false);
-  // useEffect(() => {
-  //   const interstitial = InterstitialAd.createForAdRequest(adUnitId);
-  //   const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-  //     setLoadedReclama(true);
-  //   });
-  //   interstitial.load();
-  //   return unsubscribe;
-  // }, []);
-  // ******************************************
 
   // при старте игры создаем доску
   useEffect(() => {
@@ -207,8 +192,8 @@ const StartGame = ({ route, navigation }) => {
     if (startTimer === "3s") {
       setTimeMove(3);
     }
-    if (startTimer === "1s") {
-      setTimeMove(1);
+    if (startTimer === "2s") {
+      setTimeMove(2);
     }
   };
 
@@ -221,7 +206,9 @@ const StartGame = ({ route, navigation }) => {
           Two Player Game
         </Text>
       )}
-      <HeaderTurnLetter turnLetter={turnLetter} turnName={turnName} />
+
+      <HeaderTurnLetter result={winGame.result} turnLetter={turnLetter} turnName={turnName} />
+
       {gameBoard && winCombinations.length > 1 && (
         <GameBoard
           gamePress={gamePress}
@@ -231,35 +218,51 @@ const StartGame = ({ route, navigation }) => {
           winGameCombination={winGame.winCombination}
         />
       )}
-      {startTimer !== "" && (
+      {startTimer !== "" && winGame.result === "" && (
         <Timer timeMove={timeMove} setTimeMove={setTimeMove} timerStop={timerStop} />
       )}
       {winGame.result !== "" && (
         <ModalWin winGame={winGame} restart={restart} navigation={navigation} />
       )}
-      {/* {loadedReclama && (
-        <Button
-          title="Show Interstitial"
-          onPress={() => {
-            interstitial.show();
-          }}
-        />
-      )} */}
+      {winGame.result !== "" && (
+        <Flex style={styles.butBox}>
+          <Button
+            tintColor="#ffffff"
+            title="Restart"
+            color="#11a16af4"
+            style={styles.button}
+            onPress={restart}
+          />
+          {/* <Button
+            title="menu"
+            tintColor="#ffffff"
+            color="#01a5bbfc"
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("Bot");
+            }}
+          /> */}
+        </Flex>
+      )}
     </Flex>
   );
 };
 
 const styles = StyleSheet.create({
-  conteiner: { backgroundColor: "#555", position: "relative" },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#ffffff",
-    marginBottom: 20,
-  },
   button: {
-    marginBottom: 30,
+    borderColor: "#999",
+    borderWidth: 1,
+    height: 50,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
+  butBox: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  conteiner: { backgroundColor: variableThema.backgroundApp, position: "relative" },
 });
 
 export default StartGame;

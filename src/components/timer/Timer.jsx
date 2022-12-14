@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
 import { StyleSheet, Dimensions } from "react-native";
+import { variableThema } from "../../helpers/variableThema";
 
 export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
   const [ping, setPing] = useState(null);
@@ -30,19 +31,19 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
 
   useEffect(() => {
     if (timeMove < 2) {
-      setColorTime("#cc403b");
+      setColorTime("#e72962");
       return;
     }
     if (timeMove < 3) {
-      setColorTime("#f8ab04");
+      setColorTime("#f8a304");
       return;
     }
     if (timeMove < 4) {
-      setColorTime("#a2e22c");
+      setColorTime("#2cb420");
       return;
     }
     if (timeMove > 3) {
-      setColorTime("#a2e5ff");
+      setColorTime("#55c4f0");
       return;
     }
   }, [timeMove]);
@@ -60,7 +61,6 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
 const styles = StyleSheet.create({
   conteiner: {
     flexDirection: "row",
-    backgroundColor: "#555",
   },
   title: {},
 });

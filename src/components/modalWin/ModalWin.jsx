@@ -1,33 +1,30 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Text, Button } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Animated, View } from "react-native";
+import { variableThema } from "../../helpers/variableThema";
 
 export const ModalWin = ({ winGame, restart, navigation }) => {
+  const shown = new Animated.Value(0);
+
+  useEffect(() => {
+    Animated.timing(shown, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [winGame]);
+  // opacity: shown
   return (
     <Flex center style={styles.conteiner}>
       {winGame.result === "win" && (
-        <Text style={winGame.nameWin === "bot" ? styles.loser : styles.win}>
-          {winGame.nameWin.toUpperCase()}: {winGame.winLetter.toUpperCase()} won!
-        </Text>
+        <Animated.View style={{ opacity: shown, transform: [{ scale: shown }] }}>
+          <Text style={winGame.nameWin === "bot" ? styles.loser : styles.win}>
+            {winGame.nameWin.toUpperCase()}: {winGame.winLetter.toUpperCase()} won!
+          </Text>
+        </Animated.View>
       )}
       {winGame.result === "drow" && <Text style={styles.drow}>It's a draw</Text>}
-      <Flex style={styles.butBox}>
-        <Button
-          tintColor="#ffffff"
-          title="Restart"
-          color="#006141ae"
-          style={styles.button}
-          onPress={restart}
-        />
-        <Button
-          title="Show me reclama!"
-          tintColor="#ffffff"
-          color="#007888a7"
-          style={styles.button}
-          onPress={() => {}}
-        />
-      </Flex>
     </Flex>
   );
 };
@@ -37,9 +34,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     position: "absolute",
     backgroundColor: "transparent",
-    width: Dimensions.get("window").width * 0.85,
-    height: Dimensions.get("window").height * 0.17,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
     flexDirection: "column",
+    backgroundColor: "#aaaaaa67",
   },
   please: {
     textAlign: "center",
@@ -49,12 +47,7 @@ const styles = StyleSheet.create({
     color: "#44006b",
     marginTop: Dimensions.get("window").height * 0.09,
   },
-  button: {
-    borderColor: "#999",
-    borderWidth: 1,
-  },
-  butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
-  drow: { fontSize: 28, fontWeight: "800", color: "#202020", marginBottom: 30 },
-  loser: { fontSize: 28, fontWeight: "800", color: "#ff3370", marginBottom: 30 },
-  win: { fontSize: 28, fontWeight: "800", color: "#00ff9d", marginBottom: 30 },
+  drow: { fontSize: 32, fontWeight: "800", color: "#0b58cc", marginBottom: 30 },
+  loser: { fontSize: 32, fontWeight: "800", color: "#f8306c", marginBottom: 30 },
+  win: { fontSize: 32, fontWeight: "800", color: "#01915a", marginBottom: 30 },
 });

@@ -2,7 +2,7 @@ import { Text } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
 import React from "react";
 import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-// import { variableThema } from "../helpers/variableThema";
+import { variableThema } from "../helpers/variableThema";
 
 const PlayerSetting = ({ navigation }) => {
   return (
@@ -14,7 +14,7 @@ const PlayerSetting = ({ navigation }) => {
         style={styles.button}
         onPress={() => navigation.navigate("Start", { lvl: null, sizeBoard: 3, startTimer: "" })}
       >
-        <Text>board 3*3</Text>
+        <Text style={styles.textBtn}>board 3*3</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
@@ -22,35 +22,39 @@ const PlayerSetting = ({ navigation }) => {
           navigation.navigate("Start", { lvl: null, sizeBoard: 4, startTimer: "" });
         }}
       >
-        <Text>board 4*4</Text>
+        <Text style={styles.textBtn}>board 4*4</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Start", { lvl: null, sizeBoard: 5, startTimer: "" })}
       >
-        <Text>board 5*5</Text>
+        <Text style={styles.textBtn}>board 5*5</Text>
       </TouchableOpacity>
     </Flex>
   );
 };
 const styles = StyleSheet.create({
-  conteiner: { backgroundColor: "#555" },
+  conteiner: { backgroundColor: variableThema.backgroundApp },
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#89dbc9",
+    color: variableThema.titleApp,
     marginBottom: 20,
   },
   start: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#e788ff",
+    color: variableThema.colorX,
     marginBottom: 20,
   },
-  helperText: {},
+  textBtn: {
+    fontWeight: "800",
+    fontSize: 18,
+    color: "#fff",
+  },
   button: {
     fontWeight: "800",
-    backgroundColor: "#9b9b9b",
+    backgroundColor: variableThema.generalBtn,
     borderRadius: 5,
     marginBottom: 30,
     minWidth: Dimensions.get("window").width * 0.5,

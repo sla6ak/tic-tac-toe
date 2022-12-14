@@ -5,29 +5,27 @@ import { variableThema } from "../../helpers/variableThema";
 
 const HeaderVSbot = ({ lvl, counter }) => {
   return (
-    <Flex>
-      <Text style={{ fontSize: 22, fontWeight: "800", color: "#1d1d1d", marginBottom: 10 }}>
-        Game vs_
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: "800",
-            color: variableThema[lvl],
-            marginBottom: 20,
-          }}
-        >
-          {lvl.toUpperCase()}
-        </Text>
-        _bot
+    <Flex center>
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: "800",
+          color: variableThema[lvl],
+          marginBottom: 20,
+        }}
+      >
+        {lvl.toUpperCase()}
       </Text>
       <Flex direction="row" style={{ marginBottom: 5 }}>
-        <Text style={{ fontSize: 18, fontWeight: "600", color: "#252525" }}>match PLAYER:</Text>
+        <Text style={{ fontSize: 18, fontWeight: "600", color: variableThema.titleApp }}>
+          match PLAYER:
+        </Text>
         <Text
           style={{
             marginLeft: 5,
             fontSize: 20,
             fontWeight: "800",
-            color: "#00c241",
+            color: "#0085c2",
           }}
         >
           {counter.player}
@@ -37,7 +35,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             fontSize: 18,
             fontWeight: "600",
             marginLeft: 15,
-            color: "#252525",
+            color: variableThema.titleApp,
           }}
         >
           BOT:

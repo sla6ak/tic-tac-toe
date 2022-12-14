@@ -2,7 +2,7 @@
   "expo": {
     "name": "tic-tac-toe",
     "slug": "tic-tac-toe",
-    "version": "2.0.1",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -37,10 +37,6 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    },
-    "react-native-google-mobile-ads": {
-      "android_app_id": "",
-      "ios_app_id": ""
     }
   }
 }
