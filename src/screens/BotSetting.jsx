@@ -2,30 +2,19 @@ import { Flex, Text } from "@react-native-material/core";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { variableThema } from "../helpers/variableThema";
+import ButtonCast from "../components/buttonCast/ButtonCast";
 
 const BotSetting = ({ navigation }) => {
   const [timer, setTimer] = useState("");
   const [lvl, setLvl] = useState("easy");
   const [sizeFont, setSizeFont] = useState(16);
+
   useEffect(() => {
     const window = Dimensions.get("window");
     if (window.width < 430) {
       setSizeFont(12);
     }
   }, []);
-
-  const colorTimer = () => {
-    if (timer === "5s") {
-      return variableThema.normal;
-    }
-    if (timer === "3s") {
-      return variableThema.hard;
-    }
-    if (timer === "1s") {
-      return variableThema.imposible;
-    }
-    return variableThema.easy;
-  };
 
   return (
     <Flex fill center style={styles.conteiner}>
@@ -34,96 +23,93 @@ const BotSetting = ({ navigation }) => {
         <Flex direction="row" style={styles.boxLvl}>
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: lvl === "easy" ? variableThema.easy : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor: lvl === "easy" ? variableThema.easy : "#777",
+                },
+              ]}
               onPress={() => setLvl("easy")}
             />
             <Text
               variant="body2"
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.easy,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.easy,
+                },
+              ]}
             >
               easy
             </Text>
           </Flex>
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: lvl === "normal" ? variableThema.normal : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor:
+                    lvl === "normal" ? variableThema.normal : "#777",
+                },
+              ]}
               onPress={() => setLvl("normal")}
             />
             <Text
               variant="body2"
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.normal,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.normal,
+                },
+              ]}
             >
               normal
             </Text>
           </Flex>
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: lvl === "hard" ? variableThema.hard : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor: lvl === "hard" ? variableThema.hard : "#777",
+                },
+              ]}
               onPress={() => setLvl("hard")}
             />
             <Text
-              variant="body2"
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: "#eeab1b",
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.hard,
+                },
+              ]}
             >
               hard
             </Text>
           </Flex>
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: lvl === "impossible" ? variableThema.impossible : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor:
+                    lvl === "impossible" ? variableThema.impossible : "#777",
+                },
+              ]}
               onPress={() => setLvl("impossible")}
             />
             <Text
               variant="body2"
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.impossible,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.impossible,
+                },
+              ]}
             >
               impossible
             </Text>
@@ -135,23 +121,22 @@ const BotSetting = ({ navigation }) => {
         <Flex direction="row" style={styles.boxLvl}>
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: timer === "" ? variableThema.easy : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor: timer === "" ? variableThema.easy : "#777",
+                },
+              ]}
               onPress={() => setTimer("")}
             />
             <Text
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.easy,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.easy,
+                },
+              ]}
             >
               no timer
             </Text>
@@ -159,23 +144,23 @@ const BotSetting = ({ navigation }) => {
 
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: timer === "5s" ? variableThema.normal : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor:
+                    timer === "5s" ? variableThema.normal : "#777",
+                },
+              ]}
               onPress={() => setTimer("5s")}
             />
             <Text
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.normal,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.normal,
+                },
+              ]}
             >
               5s
             </Text>
@@ -183,23 +168,22 @@ const BotSetting = ({ navigation }) => {
 
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: timer === "3s" ? variableThema.hard : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor: timer === "3s" ? variableThema.hard : "#777",
+                },
+              ]}
               onPress={() => setTimer("3s")}
             />
             <Text
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.hard,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.hard,
+                },
+              ]}
             >
               3s
             </Text>
@@ -207,23 +191,23 @@ const BotSetting = ({ navigation }) => {
 
           <Flex style={styles.buttonSet}>
             <TouchableOpacity
-              style={{
-                width: 35,
-                height: 35,
-                backgroundColor: timer === "2s" ? variableThema.impossible : "#444",
-                borderRadius: 20,
-                borderColor: "#777",
-                borderWidth: 5,
-              }}
+              style={[
+                styles.buttonCircle,
+                {
+                  backgroundColor:
+                    timer === "2s" ? variableThema.impossible : "#777",
+                },
+              ]}
               onPress={() => setTimer("2s")}
             />
             <Text
-              style={{
-                textAlign: "center",
-                fontSize: sizeFont,
-                fontWeight: "600",
-                color: variableThema.impossible,
-              }}
+              style={[
+                styles.butSetText,
+                {
+                  fontSize: sizeFont,
+                  color: variableThema.impossible,
+                },
+              ]}
             >
               2s
             </Text>
@@ -233,66 +217,77 @@ const BotSetting = ({ navigation }) => {
 
       <Flex center>
         <Text style={styles.start}>Start game</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Start", { lvl, sizeBoard: 3, startTimer: timer })}
-        >
-          <Text style={styles.textBtn}>board 3*3</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate("Start", { lvl, sizeBoard: 4, startTimer: timer });
+        <ButtonCast
+          textBt={"board 3*3"}
+          onClickBt={() =>
+            navigation.navigate("StartB", {
+              lvl,
+              sizeBoard: 3,
+              startTimer: timer,
+            })
+          }
+        />
+        <ButtonCast
+          textBt={"board 4*4"}
+          onClickBt={() => {
+            navigation.navigate("StartB", {
+              lvl,
+              sizeBoard: 4,
+              startTimer: timer,
+            });
           }}
-        >
-          <Text style={styles.textBtn}>board 4*4</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Start", { lvl, sizeBoard: 5, startTimer: timer })}
-        >
-          <Text style={styles.textBtn}>board 5*5</Text>
-        </TouchableOpacity>
+        />
+        <ButtonCast
+          textBt={"board 5*5"}
+          onClickBt={() =>
+            navigation.navigate("StartB", {
+              lvl,
+              sizeBoard: 5,
+              startTimer: timer,
+            })
+          }
+        />
       </Flex>
     </Flex>
   );
 };
 const styles = StyleSheet.create({
-  conteiner: { backgroundColor: variableThema.backgroundApp },
+  conteiner: {
+    backgroundColor: variableThema.backgroundApp,
+    paddingTop: Dimensions.get("window").height * 0.08,
+  },
   titleSet: {
     fontSize: 18,
     fontWeight: "800",
     color: variableThema.titleApp,
-    marginBottom: 5,
+    marginBottom: Dimensions.get("window").height * 0.02,
   },
-  buttonSet: { justifyContent: "center", flex: 1, alignItems: "center" },
-
-  button: {
-    fontWeight: "800",
-    backgroundColor: variableThema.generalBtn,
-    borderRadius: 5,
-    marginBottom: 30,
-    minWidth: Dimensions.get("window").width * 0.5,
-    minHeight: Dimensions.get("window").height * 0.06,
-    display: "flex",
+  buttonSet: {
     justifyContent: "center",
+    flex: 1,
     alignItems: "center",
+    marginBottom: Dimensions.get("window").height * 0.015,
   },
-  textBtn: {
-    fontWeight: "800",
-    fontSize: 18,
-    color: "#fff",
+  buttonCircle: {
+    width: Dimensions.get("window").width * 0.07,
+    height: Dimensions.get("window").width * 0.07,
+    borderRadius: Dimensions.get("window").width * 0.05,
+    borderColor: "#444",
+    borderWidth: Dimensions.get("window").width * 0.01,
   },
   boxLvl: {
     marginBottom: Dimensions.get("window").height * 0.01,
-    minWidth: Dimensions.get("window").width * 0.7,
-    minHeight: Dimensions.get("window").height * 0.15,
+    width: Dimensions.get("window").width * 0.85,
+  },
+  butSetText: {
+    textAlign: "center",
+    fontWeight: "600",
   },
   start: {
     fontSize: 22,
     fontWeight: "800",
     color: variableThema.colorX,
-    marginBottom: 20,
+    marginBottom: Dimensions.get("window").height * 0.015,
   },
 });
 

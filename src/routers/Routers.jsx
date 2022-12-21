@@ -3,13 +3,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image, StyleSheet, Dimensions } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import BotSetting from "../screens/BotSetting";
-import StartGame from "../screens/StartGame";
+import StartGamePlayer from "../screens/StartGamePlayer";
+import StartGameBot from "../screens/StartGameBot";
 import PlayerSetting from "../screens/PlayerSetting";
 import { variableThema } from "../helpers/variableThema";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import home from "./images/home.png";
 import bot from "./images/manageaccounts.png";
 import human from "./images/people.png";
+import homeG from "./images/homeG.png";
+import botG from "./images/manageaccountsG.png";
+import humanG from "./images/peopleG.png";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -17,17 +21,33 @@ const Tab = createBottomTabNavigator();
 const Routers = () => {
   const BotGame = () => {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={BotSetting} options={{ headerShown: false }} />
-        <Stack.Screen name="Start" component={StartGame} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="HomeB">
+        <Stack.Screen
+          name="HomeB"
+          component={BotSetting}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="StartB"
+          component={StartGameBot}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     );
   };
   const HumanGame = () => {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={PlayerSetting} options={{ headerShown: false }} />
-        <Stack.Screen name="Start" component={StartGame} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="HomeP">
+        <Stack.Screen
+          name="HomeP"
+          component={PlayerSetting}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="StartP"
+          component={StartGamePlayer}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     );
   };
@@ -35,6 +55,7 @@ const Routers = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        initialRouteName="Home"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
@@ -53,9 +74,12 @@ const Routers = () => {
             tabBarLabel: "",
             tabBarActiveTintColor: {},
             tabBarIconStyle: {},
-            tabBarIcon: ({ focused: boolean, color: string, size: number }) => (
-              <Image style={styles.logo} source={home} />
-            ),
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Image style={styles.logo} source={homeG} />
+              ) : (
+                <Image style={styles.logo} source={home} />
+              ),
           }}
         />
         <Tab.Screen
@@ -63,7 +87,12 @@ const Routers = () => {
           component={BotGame}
           options={{
             tabBarLabel: "",
-            tabBarIcon: () => <Image style={styles.logo} source={bot} />,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Image style={styles.logo} source={botG} />
+              ) : (
+                <Image style={styles.logo} source={bot} />
+              ),
           }}
         />
         <Tab.Screen
@@ -71,7 +100,12 @@ const Routers = () => {
           component={HumanGame}
           options={{
             tabBarLabel: "",
-            tabBarIcon: () => <Image style={styles.logo} source={human} />,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Image style={styles.logo} source={humanG} />
+              ) : (
+                <Image style={styles.logo} source={human} />
+              ),
           }}
         />
       </Tab.Navigator>

@@ -2,6 +2,34 @@ class getBestMove {
   constructor() {
     this.n = 0;
   }
+  getMoveLvl = ({ lvl, letter, winCombinations, emptyArr, gameBoard }) => {
+    let res = emptyArr[0];
+    if (lvl === "easy") {
+      res = this.getMoveLvl1({ emptyArr });
+    } else if (lvl === "normal") {
+      res = this.getMoveLvl2({
+        letter,
+        winCombinations,
+        gameBoard,
+        emptyArr,
+      });
+    } else if (lvl === "hard") {
+      res = this.getMoveLvl3({
+        letter,
+        winCombinations,
+        gameBoard,
+        emptyArr,
+      });
+    } else if (lvl === "impossible") {
+      res = this.getMoveLvl4({
+        letter,
+        winCombinations,
+        gameBoard,
+        emptyArr,
+      });
+    }
+    return res;
+  };
 
   getMoveLvl1 = ({ emptyArr }) => {
     const x = this.getRandomInt(emptyArr.length);
@@ -166,7 +194,9 @@ class getBestMove {
       // console.log("итоговый вариант: ", isWinBot);
       // isWinBot === [из 3 или 4х индексов]
       if (isWinBot.length === 3) {
-        const findVariableIND = isWinBot.find((el) => gameBoard[el].letter === "");
+        const findVariableIND = isWinBot
+          .reverse()
+          .find((el) => gameBoard[el].letter === "");
         return { el: gameBoard[findVariableIND], ind: findVariableIND };
       }
       if (isWinBot.length === 4) {
@@ -194,7 +224,9 @@ class getBestMove {
 
     // создадим N массивов из доступных клеток
     emptyArr.forEach((element) => {
-      arrBoards.push(this.move({ element, ind: element.id - 1, letter, gameBoard }));
+      arrBoards.push(
+        this.move({ element, ind: element.id - 1, letter, gameBoard })
+      );
     });
     // найдем выигранную вариант после хода
     const winBoard = arrBoards.find((el) => {
@@ -290,7 +322,11 @@ class getBestMove {
         return arrW2L;
       }
       // проверим не опережает ли соперник нас на ход
-      const opponentStart = this.findVariableForOpponent({ winCombinations, board, letter });
+      const opponentStart = this.findVariableForOpponent({
+        winCombinations,
+        board,
+        letter,
+      });
 
       if (opponentStart) {
         return opponentStart;

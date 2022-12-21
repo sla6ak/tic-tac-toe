@@ -1,16 +1,17 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { Text, Flex, Button } from "@react-native-material/core";
 import React, { useEffect, useState } from "react";
 import { variableThema } from "../helpers/variableThema";
 import { Timer } from "../components/timer/Timer";
 import gameBoardClass from "../helpers/gameBoardClass";
+import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
 import getBestMove from "../helpers/getBestMoveClass";
 import GameBoard from "../components/gameBoard/GameBoard";
 import { ModalWin } from "../components/modalWin/ModalWin";
-import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
+import ButtonCast from "../components/buttonCast/ButtonCast";
 
-const StartGame = ({ route, navigation }) => {
+const StartGamePlayer = ({ route, navigation }) => {
   const initialWinInfo = {
     result: "",
     winLetter: "",
@@ -21,33 +22,38 @@ const StartGame = ({ route, navigation }) => {
   const [gameBoard, setGameBoard] = useState(null); // массив с текущим состоянием на доске
   const [winCombinations, setWinCombinations] = useState([]); // содержит победные комбинации для текущего размера доски
   const [turnLetter, setTurnLetter] = useState("x"); // кто ходит? 'player "X"' или 'player "O"'
-  const [turnName, setTurnName] = useState("player"); // кто ходит? 'player или bot
+  const [turnName, setTurnName] = useState("player1"); // кто ходит? 'player или bot
   const [winGame, setWinGame] = useState(initialWinInfo); // инфо о завершении игры
   const [btDis, setBtDis] = useState(false);
   const [timeMove, setTimeMove] = useState(9);
   const [timerStop, setTimerStop] = useState(false);
-  const [whoStart, setWhoStart] = useState("player");
-  const [counter, setCounter] = useState({ player: 0, bot: 0 });
+  const [whoStart, setWhoStart] = useState("player1");
+  const [counter, setCounter] = useState({ player1: 0, player2: 0 });
 
   // при старте игры создаем доску
   useEffect(() => {
     setGameBoard(() => gameBoardClass.getSizeBoard(sizeBoard));
     setWinCombinations(() => gameBoardClass.getSizeWinCombination(sizeBoard));
-    setCounter({ player: 0, bot: 0 });
+    setCounter({ player1: 0, player2: 0 });
   }, []);
 
-  // //контролирует кто победил
+  // контролирует кто победил
   useEffect(() => {
     if (!gameBoard) return;
     if (winCombinations === []) return;
 
     const letter = turnLetter === "x" ? "o" : "x";
-    let winG = getBestMove.findWin({ winCombinations, board: gameBoard, letter });
+    let winG = getBestMove.findWin({
+      winCombinations,
+      board: gameBoard,
+      letter,
+    });
     if (winG) {
       setBtDis(true);
       const nameW = gameBoard[winG[0]].move;
       const letterW = gameBoard[winG[0]].letter;
       setCounter((prevW) => {
+        console.log("dfgdfg");
         const x = prevW[nameW] + 1;
         return { ...prevW, [nameW]: x };
       });
@@ -60,7 +66,8 @@ const StartGame = ({ route, navigation }) => {
       setTimerStop(true);
       return;
     }
-    //
+
+    // контролирует возможны ли еще ходы
     const stop = draw();
     if (stop.length === gameBoard.length - 1 && whoStart === "bot") {
       setTimeMove(9);
@@ -68,34 +75,8 @@ const StartGame = ({ route, navigation }) => {
     if (!stop || stop.length < 1) {
       return;
     }
-    // если мы против бота тогда вызываем бота
-    if (lvl) {
-      if (turnName !== "bot") {
-        setBtDis(false);
-        return;
-      }
-      // если игра продолжается тогда ходит бот
-      const res = handeleBot({ letter: turnLetter });
-      gamePress(res);
-      setBtDis(false);
-    }
-  }, [turnName, turnLetter, gameBoard]);
-
-  // высщитывает куда походить боту
-  const handeleBot = ({ letter }) => {
-    const emptyArr = draw();
-    let res = emptyArr[0];
-    if (lvl === "easy") {
-      res = getBestMove.getMoveLvl1({ emptyArr });
-    } else if (lvl === "normal") {
-      res = getBestMove.getMoveLvl2({ letter, winCombinations, gameBoard, emptyArr });
-    } else if (lvl === "hard") {
-      res = getBestMove.getMoveLvl3({ letter, winCombinations, gameBoard, emptyArr });
-    } else if (lvl === "impossible") {
-      res = getBestMove.getMoveLvl4({ letter, winCombinations, gameBoard, emptyArr });
-    }
-    return res;
-  };
+    setBtDis(false);
+  }, [turnName, gameBoard]);
 
   // событие нажатия
   const gamePress = ({ el, ind }) => {
@@ -114,10 +95,7 @@ const StartGame = ({ route, navigation }) => {
       autoSetPing();
       setTurnLetter((prevL) => (prevL === "x" ? "o" : "x"));
       setTurnName((prevN) => {
-        if (lvl) {
-          return prevN === "player" ? "bot" : "player";
-        }
-        return "player";
+        return prevN === "player1" ? "player2" : "player1";
       });
     } catch (error) {
       console.log(error);
@@ -136,14 +114,9 @@ const StartGame = ({ route, navigation }) => {
     const letter = turnLetter;
     setTurnLetter((prevL) => (prevL === "x" ? "o" : "x"));
     setTurnName((prevN) => {
-      if (lvl) {
-        return prevN === "player" ? "bot" : "player";
-      }
-      return "player";
+      return prevN === "player1" ? "player2" : "player1";
     });
     autoSetPing();
-    const res = handeleBot({ letter });
-    gamePress(res);
     setBtDis(false);
     return;
   }, [timeMove]);
@@ -160,7 +133,7 @@ const StartGame = ({ route, navigation }) => {
       });
       setTimerStop(true);
       setCounter((prevW) => {
-        return { bot: prevW.bot + 0.5, player: prevW.player + 0.5 };
+        return { bot: prevW.player1 + 0.5, player: prevW.player2 + 0.5 };
       });
       setBtDis(true);
       return [];
@@ -177,8 +150,10 @@ const StartGame = ({ route, navigation }) => {
     setTimeMove(9);
     setBtDis(false);
     if (lvl) {
-      setTurnName(whoStart === "bot" ? "player" : "bot");
-      setWhoStart((prevStart) => (prevStart === "bot" ? "player" : "bot"));
+      setTurnName(whoStart === "player1" ? "player2" : "player1");
+      setWhoStart((prevStart) =>
+        prevStart === "player1" ? "player2" : "player1"
+      );
     }
     return;
   };
@@ -199,15 +174,12 @@ const StartGame = ({ route, navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      {lvl ? (
-        <HeaderVSbot lvl={lvl} counter={counter} />
-      ) : (
-        <Text style={{ fontSize: 22, fontWeight: "800", color: "#161616", marginBottom: 20 }}>
-          Two Player Game
-        </Text>
-      )}
-
-      <HeaderTurnLetter result={winGame.result} turnLetter={turnLetter} turnName={turnName} />
+      <HeaderVSbot lvl={lvl} counter={counter} />
+      <HeaderTurnLetter
+        result={winGame.result}
+        turnLetter={turnLetter}
+        turnName={turnName}
+      />
 
       {gameBoard && winCombinations.length > 1 && (
         <GameBoard
@@ -218,31 +190,38 @@ const StartGame = ({ route, navigation }) => {
           winGameCombination={winGame.winCombination}
         />
       )}
-      {startTimer !== "" && winGame.result === "" && (
-        <Timer timeMove={timeMove} setTimeMove={setTimeMove} timerStop={timerStop} />
-      )}
       {winGame.result !== "" && (
         <ModalWin winGame={winGame} restart={restart} navigation={navigation} />
       )}
       {winGame.result !== "" && (
         <Flex style={styles.butBox}>
-          <Button
-            tintColor="#ffffff"
-            title="Restart"
-            color="#11a16af4"
-            style={styles.button}
-            onPress={restart}
+          <ButtonCast textBt={"RESTART"} onClickBt={restart} small={2} />
+          <ButtonCast
+            textBt={"SETTING"}
+            onClickBt={() => navigation.navigate("HomeP")}
+            small={2}
           />
-          {/* <Button
-            title="menu"
-            tintColor="#ffffff"
-            color="#01a5bbfc"
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate("Bot");
-            }}
-          /> */}
         </Flex>
+      )}
+      {startTimer !== "" && winGame.result === "" && (
+        <Timer
+          timeMove={timeMove}
+          setTimeMove={setTimeMove}
+          timerStop={timerStop}
+        />
+      )}
+      {startTimer === "" && winGame.result === "" && (
+        <Text
+          style={{
+            fontSize: 28,
+            fontWeight: "400",
+            color: "#55c4f0",
+            marginTop: 10,
+            marginBottom: 30,
+          }}
+        >
+          NO TIMER
+        </Text>
       )}
     </Flex>
   );
@@ -252,17 +231,23 @@ const styles = StyleSheet.create({
   button: {
     borderColor: "#999",
     borderWidth: 1,
-    height: 50,
+    height: Dimensions.get("window").height * 0.05,
+    width: Dimensions.get("window").width * 0.35,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: Dimensions.get("window").height * 0.01,
   },
   butBox: {
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
   },
-  conteiner: { backgroundColor: variableThema.backgroundApp, position: "relative" },
+  conteiner: {
+    backgroundColor: variableThema.backgroundApp,
+    position: "relative",
+    paddingTop: Dimensions.get("window").height * 0.081,
+  },
 });
 
-export default StartGame;
+export default StartGamePlayer;

@@ -52,7 +52,9 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
     <Flex center style={styles.conteiner}>
       <Text style={{ fontSize: 38, fontWeight: "800", color: colorTime }}>
         0{timeMove}
-        <Text style={{ fontSize: 28, fontWeight: "400", color: colorTime }}>:left</Text>
+        <Text style={{ fontSize: 28, fontWeight: "400", color: colorTime }}>
+          :left
+        </Text>
       </Text>
     </Flex>
   );
@@ -61,6 +63,7 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
 const styles = StyleSheet.create({
   conteiner: {
     flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 30,
   },
-  title: {},
 });

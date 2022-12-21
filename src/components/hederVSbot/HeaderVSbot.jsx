@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { Text, Flex } from "@react-native-material/core";
 import React, { useEffect } from "react";
 import { variableThema } from "../../helpers/variableThema";
@@ -6,19 +6,48 @@ import { variableThema } from "../../helpers/variableThema";
 const HeaderVSbot = ({ lvl, counter }) => {
   return (
     <Flex center>
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: "800",
-          color: variableThema[lvl],
-          marginBottom: 20,
-        }}
-      >
-        {lvl.toUpperCase()}
-      </Text>
+      {lvl ? (
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: "800",
+            color: variableThema[lvl],
+            marginBottom: Dimensions.get("window").height * 0.015,
+          }}
+        >
+          {lvl.toUpperCase()}
+        </Text>
+      ) : (
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: "800",
+            color: "#161616",
+            marginBottom: Dimensions.get("window").height * 0.015,
+          }}
+        >
+          Two Player Game
+        </Text>
+      )}
       <Flex direction="row" style={{ marginBottom: 5 }}>
-        <Text style={{ fontSize: 18, fontWeight: "600", color: variableThema.titleApp }}>
-          match PLAYER:
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "600",
+            marginRight: 10,
+            color: variableThema.titleApp,
+          }}
+        >
+          match
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "600",
+            color: variableThema.titleApp,
+          }}
+        >
+          {lvl ? "PLAYER:" : "PLAYER1:"}
         </Text>
         <Text
           style={{
@@ -28,7 +57,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: "#0085c2",
           }}
         >
-          {counter.player}
+          {lvl ? counter.player : counter.player1}
         </Text>
         <Text
           style={{
@@ -38,7 +67,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: variableThema.titleApp,
           }}
         >
-          BOT:
+          {lvl ? "BOT:" : "PLAYER2:"}
         </Text>
         <Text
           style={{
@@ -48,7 +77,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: "#fa3c3c",
           }}
         >
-          {counter.bot}
+          {lvl ? counter.bot : counter.player2}
         </Text>
       </Flex>
     </Flex>

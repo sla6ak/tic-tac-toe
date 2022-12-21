@@ -1,16 +1,41 @@
 import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Flex, Text } from "@react-native-material/core";
+import { Flex } from "@react-native-material/core";
 import View from "@expo/html-elements/build/primitives/View";
 import { variableThema } from "../../helpers/variableThema";
 
-const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination }) => {
+const GameBoard = ({
+  gamePress,
+  sizeBoard,
+  btDis,
+  gameBoard,
+  winGameCombination,
+}) => {
   const [sizeSq, setSizeSq] = useState("33.3%"); //
+  const [sizeFont, setSizeFont] = useState(30);
+
+  useEffect(() => {
+    const window = Dimensions.get("window");
+    if (window.width > 799) {
+      setSizeFont(80);
+      return;
+    }
+    if (window.width > 599) {
+      setSizeFont(60);
+      return;
+    }
+    if (window.width > 399) {
+      setSizeFont(45);
+      return;
+    }
+    return;
+  }, []);
+
   // gameBoard = { id: "", letter: "", move: "" }
   useEffect(() => {
     if (sizeBoard === 3) {
-      setSizeSq("33.3%");
+      setSizeSq("33.33%");
       return;
     }
     if (sizeBoard === 4) {
@@ -28,7 +53,7 @@ const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination 
   };
 
   return (
-    <Flex style={styles.conteiner}>
+    <View style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
         let up = null;
         const keySq = toString(getRandomInt(999999)) + el.id;
@@ -40,16 +65,13 @@ const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination 
         }
         const square = (
           <View
-            style={{
-              width: sizeSq,
-              height: sizeSq,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#979797",
-              borderWidth: 1,
-              padding: 0,
-            }}
+            style={[
+              styles.squer,
+              {
+                width: sizeSq,
+                height: sizeSq,
+              },
+            ]}
             key={keySq}
           >
             <TouchableOpacity
@@ -59,25 +81,19 @@ const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination 
                 gamePress({ el, ind });
               }}
               disabled={btDis}
-              style={{
-                height: "100%",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              style={styles.tothSquer}
             >
               {el.letter === "x" && (
                 <Ionicons
                   name="close-outline"
-                  size={up ? 57 : 49}
+                  size={up ? sizeFont + 35 : sizeFont + 5}
                   color={up ? variableThema.colorWin : variableThema.colorX}
                 />
               )}
               {el.letter === "o" && (
                 <Ionicons
                   name="ellipse-outline"
-                  size={up ? 53 : 45}
+                  size={up ? sizeFont + 30 : sizeFont}
                   color={up ? variableThema.colorWin : variableThema.colorO}
                 />
               )}
@@ -86,27 +102,39 @@ const GameBoard = ({ gamePress, sizeBoard, btDis, gameBoard, winGameCombination 
         );
         return square;
       })}
-    </Flex>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   conteiner: {
+    display: "flex",
     position: "relative",
     flexWrap: "wrap",
     flexDirection: "row",
     backgroundColor: variableThema.backgroundApp,
-    borderBottomColor: variableThema.backgroundApp,
-    borderLeftColor: variableThema.backgroundApp,
-    borderRightColor: variableThema.backgroundApp,
-    borderTopColor: variableThema.backgroundApp,
-    borderBottomWidth: 2,
-    borderTopWidth: 3,
-    borderLeftWidth: 2,
-    borderRightWidth: 2,
-    borderRadius: 7,
-    width: Dimensions.get("window").width * 0.85,
-    height: Dimensions.get("window").width * 0.85,
+    borderRadius: 1,
+    borderColor: variableThema.backgroundApp,
+    shadowColor: "#93cea1",
+    width: Dimensions.get("window").width * 0.81,
+    height: Dimensions.get("window").width * 0.81,
+    elevation: 5,
+  },
+  squer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#979797",
+    backgroundColor: "transparent",
+    borderWidth: 2,
+    padding: 0,
+  },
+  tothSquer: {
+    height: "100%",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
