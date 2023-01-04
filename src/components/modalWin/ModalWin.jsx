@@ -1,55 +1,73 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Text, Button } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Animated, View } from "react-native";
+import { variableThema } from "../../helpers/variableThema";
 
-export const ModalWin = ({ winGame, restart, navigation, letterWin, whoWin }) => {
+export const ModalWin = ({ winGame, navigation }) => {
+  const shown = new Animated.Value(0);
+
+  useEffect(() => {
+    Animated.timing(shown, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [winGame]);
+  // opacity: shown
   return (
     <Flex center style={styles.conteiner}>
-      {winGame === "1" && (
-        <Text style={whoWin === "player" ? styles.win : styles.loser}>
-          {whoWin ? whoWin.toUpperCase() : letterWin.toUpperCase()} won!
-        </Text>
+      {winGame.result === "win" && (
+        <Animated.View
+          style={{ opacity: shown, transform: [{ scale: shown }] }}
+        >
+          <Text
+            style={
+              winGame.nameWin === "bot" || winGame.nameWin === "player2"
+                ? styles.loser
+                : styles.win
+            }
+          >
+            {winGame.nameWin.toUpperCase()}: {winGame.winLetter.toUpperCase()}{" "}
+            won!
+          </Text>
+        </Animated.View>
       )}
-      {winGame === "0.5" && <Text style={styles.title}>It's a draw</Text>}
-      <Flex style={styles.butBox}>
-        <Button
-          tintColor="#004b25"
-          title="Restart"
-          color="#90b1a1"
-          style={styles.button}
-          onPress={restart}
-        />
-        <Button
-          title="Back to menu"
-          color="#9b9b9b"
-          style={styles.button}
-          onPress={() => navigation.navigate("Home")}
-        />
-      </Flex>
+      {winGame.result === "drow" && (
+        <Animated.View
+          style={{ opacity: shown, transform: [{ scale: shown }] }}
+        >
+          <Text style={styles.drow}>It's a draw</Text>
+        </Animated.View>
+      )}
     </Flex>
   );
 };
 
 const styles = StyleSheet.create({
   conteiner: {
-    top: "-30%",
     paddingBottom: 10,
     position: "absolute",
-    backgroundColor: "#d1d1d1",
-    borderColor: "#004615",
-    borderWidth: 1,
-    borderRadius: 10,
-    width: Dimensions.get("window").width * 0.85,
-    height: Dimensions.get("window").width * 0.25,
+    backgroundColor: "transparent",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
     flexDirection: "column",
+    backgroundColor: "#aaaaaa67",
   },
-  butBox: { flexDirection: "row", justifyContent: "space-around", width: "100%" },
-  button: {
-    borderColor: "#999",
-    borderWidth: 1,
+  please: {
+    textAlign: "center",
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#44006b",
+    marginTop: Dimensions.get("window").height * 0.09,
   },
-  title: { fontSize: 22, fontWeight: "800", color: "#292929", marginBottom: 10 },
-  loser: { fontSize: 22, fontWeight: "800", color: "#680000", marginBottom: 10 },
-  win: { fontSize: 22, fontWeight: "800", color: "#008f53", marginBottom: 10 },
+  drow: { fontSize: 32, fontWeight: "800", color: "#0b58cc", marginBottom: 30 },
+  loser: {
+    fontSize: 32,
+    fontWeight: "800",
+    color: "#f8306c",
+    marginBottom: 30,
+  },
+  win: { fontSize: 32, fontWeight: "800", color: "#01915a", marginBottom: 30 },
 });

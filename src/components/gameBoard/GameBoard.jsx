@@ -1,151 +1,145 @@
+import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Flex } from "react-native-flex-layout";
-import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-import { gameBoardEase } from "../../helpers/gameBoard";
-import { ModalWin } from "../modalWin/ModalWin";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { winCombinations } from "../../helpers/winCombinations";
+import { Flex } from "@react-native-material/core";
+import View from "@expo/html-elements/build/primitives/View";
+import { variableThema } from "../../helpers/variableThema";
 
-export const GameBoard = ({ navigation }) => {
-  const [gameBoard, setGameBoard] = useState(gameBoardEase); // { id: "1", state: "", move: "" }
-  const [countPlayer, setCountPlayer] = useState("x");
-  const [winGame, setWinGame] = useState(null); // результаты игры: 0, 0.5, 1
-  const [btDis, setBtDis] = useState(false);
-  const [letterWin, setLetterWin] = useState(""); // 'x' или 'o'
-  const [winStyle, setWinStyle] = useState(null); // комбинация победная [0, 1, 2]
-
-  const gamePress = (el, ind) => {
-    if (gameBoard[ind].state !== "") {
-      return;
-    }
-    const newSquare = { id: el.id, state: countPlayer };
-    setGameBoard((prevState) => {
-      prevState.splice(ind, 1, newSquare);
-      return [...prevState];
-    });
-    setCountPlayer(countPlayer === "x" ? "o" : "x");
-  };
-
-  const winPlay = (letter) => {
-    const findWin = winCombinations.find(
-      (el) =>
-        gameBoard[el[0]].state === letter &&
-        gameBoard[el[1]].state === letter &&
-        gameBoard[el[2]].state === letter
-    );
-    return findWin ? findWin : null;
-  };
+const GameBoard = ({
+  gamePress,
+  sizeBoard,
+  btDis,
+  gameBoard,
+  winGameCombination,
+}) => {
+  const [sizeSq, setSizeSq] = useState("33.3%"); //
+  const [sizeFont, setSizeFont] = useState(30);
+  const [sizeFontPlus, setSizeFontPlus] = useState(10);
 
   useEffect(() => {
-    setGameBoard([...gameBoardEase]);
+    const window = Dimensions.get("window");
+    if (window.width > 799) {
+      setSizeFont(80);
+      setSizeFontPlus(40);
+      return;
+    }
+    if (window.width > 599) {
+      setSizeFont(60);
+      setSizeFontPlus(30);
+      return;
+    }
+    if (window.width > 399) {
+      setSizeFont(45);
+      setSizeFontPlus(20);
+      return;
+    }
+    return;
   }, []);
 
+  // gameBoard = { id: "", letter: "", move: "" }
   useEffect(() => {
-    let winG = null;
-    winG = winPlay("x");
-    if (!winG) {
-      winG = winPlay("o");
-    }
-    if (winG) {
-      const letterW = gameBoard[winG[0]].state;
-      setLetterWin(letterW);
-      setBtDis(true);
-      setWinStyle(winG);
-      setWinGame("1");
+    if (sizeBoard === 3) {
+      setSizeSq("32.9%");
       return;
     }
-    const stop = draw();
-    if (!stop || stop.length < 1) {
+    if (sizeBoard === 4) {
+      setSizeSq("24.3%");
       return;
     }
-  }, [gameBoard]);
-
-  const draw = () => {
-    let emptyArr = gameBoard.filter((el) => el.state === "");
-    if (!emptyArr || emptyArr.length < 1) {
-      setWinGame("0.5");
-      setBtDis(true);
-      return [];
+    if (sizeBoard === 5) {
+      setSizeSq("19.3%");
+      return;
     }
-    return emptyArr;
-  };
-
-  const restart = () => {
-    setWinGame(null);
-    setWinStyle(null);
-    setCountPlayer("x");
-    setGameBoard([...gameBoardEase]);
-    setBtDis(false);
-  };
+  }, [sizeBoard]);
 
   return (
-    <Flex style={styles.conteiner}>
+    <View style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
         let up = null;
-        if (winStyle) {
+        const keySq = "key" + el.id;
+        if (winGameCombination) {
           up =
-            winStyle.find((elem) => {
+            winGameCombination.find((elem) => {
               return elem === ind;
             }) + 1;
         }
         const square = (
-          <TouchableOpacity
-            disabled={btDis}
-            key={el.id}
-            style={styles.button}
-            onPress={() => gamePress(el, ind)}
+          <View
+            style={[
+              styles.squer,
+              {
+                width: sizeSq,
+                height: sizeSq,
+              },
+            ]}
+            key={keySq}
           >
-            {el.state === "x" && (
-              <Ionicons
-                name="close-outline"
-                size={up ? 57 : 49}
-                color={up ? "#f73791" : "#da60ff"}
-              />
-            )}
-            {el.state === "o" && (
-              <Ionicons
-                name="ellipse-outline"
-                size={up ? 53 : 45}
-                color={up ? "#f73791" : "#45fcaf"}
-              />
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              delayPressIn={10}
+              delayLongPress={10}
+              onLongPress={() => {
+                gamePress({ el, ind });
+              }}
+              disabled={btDis}
+              style={styles.tothSquer}
+            >
+              {el.letter === "x" && (
+                <Ionicons
+                  name="close-outline"
+                  size={up ? sizeFont + sizeFontPlus + 5 : sizeFont + 5}
+                  color={up ? variableThema.colorWin : variableThema.colorX}
+                />
+              )}
+              {el.letter === "o" && (
+                <Ionicons
+                  name="ellipse-outline"
+                  size={up ? sizeFont + sizeFontPlus : sizeFont}
+                  color={up ? variableThema.colorWin : variableThema.colorO}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         );
         return square;
       })}
-      {winGame && (
-        <ModalWin
-          whoWin={"player"}
-          winGame={winGame}
-          restart={restart}
-          navigation={navigation}
-          letterWin={letterWin}
-        />
-      )}
-    </Flex>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   conteiner: {
+    display: "flex",
     position: "relative",
     flexWrap: "wrap",
     flexDirection: "row",
-    backgroundColor: "#555",
-    borderColor: "#202020",
-    borderWidth: 1,
-    borderRadius: 7,
-    width: Dimensions.get("window").width * 0.85,
-    height: Dimensions.get("window").width * 0.85,
+    padding: 0,
+    justifyContent: "space-between",
+    alignContent: "space-between",
+    backgroundColor: "#84bef5",
+    // backgroundColor: variableThema.backgroundApp,
+    // borderWidth: 2,
+    // borderColor: variableThema.backgroundApp,
+    shadowColor: "#93cea1",
+    width: Dimensions.get("window").width * 0.81,
+    height: Dimensions.get("window").width * 0.81,
+    // elevation: 5,
   },
-  button: {
-    backgroundColor: "#555",
-    borderColor: "#999",
-    borderWidth: 1,
-    height: "33.3%",
-    width: "33.3%",
+  squer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "#979797",
+    backgroundColor: variableThema.backgroundApp,
+    // borderWidth: 2,
+    padding: 0,
+  },
+  tothSquer: {
+    height: "100%",
+    width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
 });
+
+export default GameBoard;

@@ -1,42 +1,65 @@
-import { Text, StatusBar } from "react-native";
-import { Button, Box } from "@react-native-material/core";
-import { Flex } from "react-native-flex-layout";
+import { Text, StatusBar, Dimensions, StyleSheet } from "react-native";
+import { Flex } from "@react-native-material/core";
+import { A } from "@expo/html-elements";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { variableThema } from "../helpers/variableThema";
+import ButtonCast from "../components/buttonCast/ButtonCast";
 
 const HomeScreen = ({ navigation }) => {
   return (
     <Flex fill center style={styles.conteiner}>
-      <Box maxW={"80%"}>
-        <Text style={styles.title}>Choose mode:</Text>
-        <Button
-          color="#9c9c9c"
-          style={styles.button}
-          title="One player"
-          onPress={() => navigation.navigate("Level")}
-        />
-        <Button
-          color="#9b9b9b"
-          style={styles.button}
-          title="Two player"
-          onPress={() => navigation.navigate("GameTwo")}
-        />
-        <StatusBar style="auto" />
-      </Box>
+      <Text style={styles.nameApp}>Tic-tac-toe!</Text>
+      <Text style={styles.title}>Choose mode:</Text>
+      <ButtonCast
+        textBt={"One player"}
+        onClickBt={() => navigation.navigate("Bot")}
+      />
+      <ButtonCast
+        textBt={"Two player"}
+        onClickBt={() => navigation.navigate("Player")}
+      />
+      <Text style={styles.titleL}>Links:</Text>
+      <A
+        style={styles.policy}
+        href="https://sla6ak.github.io/tic-tac-toe-privacy-policy/"
+      >
+        *privacy policy
+      </A>
+      <StatusBar style="auto" />
     </Flex>
   );
 };
-
 const styles = StyleSheet.create({
-  conteiner: { backgroundColor: "#555" },
+  conteiner: {
+    backgroundColor: variableThema.backgroundApp,
+    paddingTop: Dimensions.get("window").height * 0.08,
+  },
+  nameApp: {
+    fontSize: 32,
+    fontWeight: "800",
+    color: variableThema.colorX,
+    marginBottom: Dimensions.get("window").height * 0.05,
+  },
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#ffffff",
-    marginBottom: 20,
+    color: variableThema.titleApp,
+    marginBottom: Dimensions.get("window").height * 0.03,
   },
-  button: {
-    marginBottom: 30,
+  titleL: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#47cfb275",
+    marginBottom: Dimensions.get("window").height * 0.03,
+    marginTop: Dimensions.get("window").height * 0.1,
+  },
+  policy: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#3568d4",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: Dimensions.get("window").height * 0.01,
   },
 });
 export default HomeScreen;
