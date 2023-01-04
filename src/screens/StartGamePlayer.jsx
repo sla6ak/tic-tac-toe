@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { variableThema } from "../helpers/variableThema";
 import { Timer } from "../components/timer/Timer";
 import gameBoardClass from "../helpers/gameBoardClass";
-import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
+import MathCounterPlayers from "../components/mathCounterPlayers/MathCounterPlayers";
 import getBestMove from "../helpers/getBestMoveClass";
 import GameBoard from "../components/gameBoard/GameBoard";
 import { ModalWin } from "../components/modalWin/ModalWin";
@@ -41,35 +41,11 @@ const StartGamePlayer = ({ route, navigation }) => {
   useEffect(() => {
     if (!gameBoard) return;
     if (winCombinations === []) return;
-
-    const letter = turnLetter === "x" ? "o" : "x";
-    let winG = getBestMove.findWin({
-      winCombinations,
-      board: gameBoard,
-      letter,
-    });
-    if (winG) {
-      setBtDis(true);
-      const nameW = gameBoard[winG[0]].move;
-      const letterW = gameBoard[winG[0]].letter;
-      setCounter((prevW) => {
-        console.log("dfgdfg");
-        const x = prevW[nameW] + 1;
-        return { ...prevW, [nameW]: x };
-      });
-      setWinGame({
-        result: "win",
-        winLetter: letterW,
-        nameWin: nameW,
-        winCombination: winG,
-      });
-      setTimerStop(true);
-      return;
-    }
-
+    const winBoolean = win();
+    if (winBoolean) return;
     // контролирует возможны ли еще ходы
     const stop = draw();
-    if (stop.length === gameBoard.length - 1 && whoStart === "bot") {
+    if (stop.length === gameBoard.length - 1) {
       setTimeMove(9);
     }
     if (!stop || stop.length < 1) {
@@ -141,6 +117,35 @@ const StartGamePlayer = ({ route, navigation }) => {
     return emptyArr;
   };
 
+  // проверка на выигрыш
+  const win = () => {
+    const letter = turnLetter === "x" ? "o" : "x";
+    let winG = getBestMove.findWin({
+      winCombinations,
+      board: gameBoard,
+      letter,
+    });
+    if (winG) {
+      setBtDis(true);
+      const nameW = gameBoard[winG[0]].move;
+      const letterW = gameBoard[winG[0]].letter;
+      setCounter((prevW) => {
+        console.log("dfgdfg");
+        const x = prevW[nameW] + 1;
+        return { ...prevW, [nameW]: x };
+      });
+      setWinGame({
+        result: "win",
+        winLetter: letterW,
+        nameWin: nameW,
+        winCombination: winG,
+      });
+      setTimerStop(true);
+      return true;
+    }
+    return false;
+  };
+
   // сбрасываем все настройки на стартовые
   const restart = () => {
     setTimerStop(false);
@@ -174,7 +179,7 @@ const StartGamePlayer = ({ route, navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      <HeaderVSbot lvl={lvl} counter={counter} />
+      <MathCounterPlayers counter={counter} />
       <HeaderTurnLetter
         result={winGame.result}
         turnLetter={turnLetter}
@@ -247,6 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: variableThema.backgroundApp,
     position: "relative",
     paddingTop: Dimensions.get("window").height * 0.081,
+    paddingBottom: Dimensions.get("window").height * 0.031,
   },
 });
 

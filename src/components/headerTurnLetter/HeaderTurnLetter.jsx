@@ -13,7 +13,11 @@ const HeaderTurnLetter = ({ result, turnName, turnLetter }) => {
       }}
     >
       {result === "" ? (
-        <Flex direction="row" center style={{ width: Dimensions.get("window").width }}>
+        <Flex
+          direction="row"
+          center
+          style={{ width: Dimensions.get("window").width }}
+        >
           <Text
             style={{
               fontSize: 22,
@@ -37,7 +41,7 @@ const HeaderTurnLetter = ({ result, turnName, turnLetter }) => {
           {turnLetter === "x" ? (
             <Text
               style={{
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: "800",
                 color: variableThema.colorX,
               }}
@@ -47,7 +51,7 @@ const HeaderTurnLetter = ({ result, turnName, turnLetter }) => {
           ) : (
             <Text
               style={{
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: "800",
                 color: variableThema.colorO,
               }}

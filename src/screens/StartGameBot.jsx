@@ -7,7 +7,7 @@ import gameBoardClass from "../helpers/gameBoardClass";
 import getBestMove from "../helpers/getBestMoveClass";
 import GameBoard from "../components/gameBoard/GameBoard";
 import { ModalWin } from "../components/modalWin/ModalWin";
-import HeaderVSbot from "../components/hederVSbot/HeaderVSbot";
+import MathCounterBot from "../components/mathCounterBot/MathCounterBot";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
 import ButtonCast from "../components/buttonCast/ButtonCast";
 
@@ -203,7 +203,7 @@ const StartGameBot = ({ route, navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      <HeaderVSbot lvl={lvl} counter={counter} />
+      <MathCounterBot lvl={lvl} counter={counter} />
       <HeaderTurnLetter
         result={winGame.result}
         turnLetter={turnLetter}

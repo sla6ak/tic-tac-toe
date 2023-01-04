@@ -4,13 +4,18 @@
   },
   "build": {
     "development": {
+      "releaseChannel": "pre-prod",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {},
+    "release": {
+      "channel": "release",
+      "releaseChannel": "release"
+    }
   },
   "submit": {
     "production": {}

@@ -26,8 +26,11 @@ const styles = StyleSheet.create({
     backgroundColor: variableThema.generalBtn,
     borderRadius: Dimensions.get("window").height * 0.01,
     marginBottom: Dimensions.get("window").height * 0.03,
-
-    minHeight: Dimensions.get("window").height * 0.06,
+    paddingTop: Dimensions.get("window").height * 0.01,
+    paddingBottom: Dimensions.get("window").height * 0.01,
+    // minHeight: Dimensions.get("window").height * 0.06,
+    paddingLeft: Dimensions.get("window").width * 0.01,
+    paddingRight: Dimensions.get("window").width * 0.01,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

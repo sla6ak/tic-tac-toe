@@ -8,7 +8,7 @@ import ButtonCast from "../components/buttonCast/ButtonCast";
 const HomeScreen = ({ navigation }) => {
   return (
     <Flex fill center style={styles.conteiner}>
-      <Text style={styles.nameApp}>Tic-tac-toy!</Text>
+      <Text style={styles.nameApp}>Tic-tac-toe!</Text>
       <Text style={styles.title}>Choose mode:</Text>
       <ButtonCast
         textBt={"One player"}

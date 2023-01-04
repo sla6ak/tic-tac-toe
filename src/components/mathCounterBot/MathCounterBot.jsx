@@ -3,32 +3,19 @@ import { Text, Flex } from "@react-native-material/core";
 import React, { useEffect } from "react";
 import { variableThema } from "../../helpers/variableThema";
 
-const HeaderVSbot = ({ lvl, counter }) => {
+const MathCounterBot = ({ lvl, counter }) => {
   return (
     <Flex center>
-      {lvl ? (
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: "800",
-            color: variableThema[lvl],
-            marginBottom: Dimensions.get("window").height * 0.015,
-          }}
-        >
-          {lvl.toUpperCase()}
-        </Text>
-      ) : (
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: "800",
-            color: "#161616",
-            marginBottom: Dimensions.get("window").height * 0.015,
-          }}
-        >
-          Two Player Game
-        </Text>
-      )}
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: "800",
+          color: variableThema[lvl],
+          marginBottom: Dimensions.get("window").height * 0.015,
+        }}
+      >
+        {lvl.toUpperCase()}
+      </Text>
       <Flex direction="row" style={{ marginBottom: 5 }}>
         <Text
           style={{
@@ -47,7 +34,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: variableThema.titleApp,
           }}
         >
-          {lvl ? "PLAYER:" : "PLAYER1:"}
+          PLAYER:
         </Text>
         <Text
           style={{
@@ -57,7 +44,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: "#0085c2",
           }}
         >
-          {lvl ? counter.player : counter.player1}
+          {counter.player}
         </Text>
         <Text
           style={{
@@ -67,7 +54,7 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: variableThema.titleApp,
           }}
         >
-          {lvl ? "BOT:" : "PLAYER2:"}
+          BOT:
         </Text>
         <Text
           style={{
@@ -77,13 +64,13 @@ const HeaderVSbot = ({ lvl, counter }) => {
             color: "#fa3c3c",
           }}
         >
-          {lvl ? counter.bot : counter.player2}
+          {counter.bot}
         </Text>
       </Flex>
     </Flex>
   );
 };
 
-export default HeaderVSbot;
+export default MathCounterBot;
 
 const styles = StyleSheet.create({});

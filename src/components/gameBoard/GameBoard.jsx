@@ -14,19 +14,23 @@ const GameBoard = ({
 }) => {
   const [sizeSq, setSizeSq] = useState("33.3%"); //
   const [sizeFont, setSizeFont] = useState(30);
+  const [sizeFontPlus, setSizeFontPlus] = useState(10);
 
   useEffect(() => {
     const window = Dimensions.get("window");
     if (window.width > 799) {
       setSizeFont(80);
+      setSizeFontPlus(40);
       return;
     }
     if (window.width > 599) {
       setSizeFont(60);
+      setSizeFontPlus(30);
       return;
     }
     if (window.width > 399) {
       setSizeFont(45);
+      setSizeFontPlus(20);
       return;
     }
     return;
@@ -35,28 +39,24 @@ const GameBoard = ({
   // gameBoard = { id: "", letter: "", move: "" }
   useEffect(() => {
     if (sizeBoard === 3) {
-      setSizeSq("33.33%");
+      setSizeSq("32.9%");
       return;
     }
     if (sizeBoard === 4) {
-      setSizeSq("25%");
+      setSizeSq("24.3%");
       return;
     }
     if (sizeBoard === 5) {
-      setSizeSq("20%");
+      setSizeSq("19.3%");
       return;
     }
   }, [sizeBoard]);
-
-  getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-  };
 
   return (
     <View style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
         let up = null;
-        const keySq = toString(getRandomInt(999999)) + el.id;
+        const keySq = "key" + el.id;
         if (winGameCombination) {
           up =
             winGameCombination.find((elem) => {
@@ -86,14 +86,14 @@ const GameBoard = ({
               {el.letter === "x" && (
                 <Ionicons
                   name="close-outline"
-                  size={up ? sizeFont + 35 : sizeFont + 5}
+                  size={up ? sizeFont + sizeFontPlus + 5 : sizeFont + 5}
                   color={up ? variableThema.colorWin : variableThema.colorX}
                 />
               )}
               {el.letter === "o" && (
                 <Ionicons
                   name="ellipse-outline"
-                  size={up ? sizeFont + 30 : sizeFont}
+                  size={up ? sizeFont + sizeFontPlus : sizeFont}
                   color={up ? variableThema.colorWin : variableThema.colorO}
                 />
               )}
@@ -112,21 +112,25 @@ const styles = StyleSheet.create({
     position: "relative",
     flexWrap: "wrap",
     flexDirection: "row",
-    backgroundColor: variableThema.backgroundApp,
-    borderRadius: 1,
-    borderColor: variableThema.backgroundApp,
+    padding: 0,
+    justifyContent: "space-between",
+    alignContent: "space-between",
+    backgroundColor: "#84bef5",
+    // backgroundColor: variableThema.backgroundApp,
+    // borderWidth: 2,
+    // borderColor: variableThema.backgroundApp,
     shadowColor: "#93cea1",
     width: Dimensions.get("window").width * 0.81,
     height: Dimensions.get("window").width * 0.81,
-    elevation: 5,
+    // elevation: 5,
   },
   squer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "#979797",
-    backgroundColor: "transparent",
-    borderWidth: 2,
+    // borderColor: "#979797",
+    backgroundColor: variableThema.backgroundApp,
+    // borderWidth: 2,
     padding: 0,
   },
   tothSquer: {
