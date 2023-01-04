@@ -1,8 +1,27 @@
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { variableThema } from "../../helpers/variableThema";
 
 const ButtonCast = ({ textBt, onClickBt, small = null }) => {
+  const [sizeFont, setSizeFont] = useState(14);
+
+  useEffect(() => {
+    const window = Dimensions.get("window");
+    if (window.width > 799) {
+      setSizeFont(26);
+      return;
+    }
+    if (window.width > 599) {
+      setSizeFont(20);
+      return;
+    }
+    if (window.width > 399) {
+      setSizeFont(16);
+      return;
+    }
+    return;
+  }, []);
+
   return (
     <TouchableOpacity
       style={[
@@ -15,7 +34,16 @@ const ButtonCast = ({ textBt, onClickBt, small = null }) => {
       ]}
       onPress={onClickBt}
     >
-      <Text style={styles.textBtn}>{textBt}</Text>
+      <Text
+        style={[
+          styles.textBtn,
+          {
+            fontSize: sizeFont,
+          },
+        ]}
+      >
+        {textBt}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -38,7 +66,6 @@ const styles = StyleSheet.create({
   },
   textBtn: {
     fontWeight: "800",
-    fontSize: 20,
     color: "#fff",
   },
 });

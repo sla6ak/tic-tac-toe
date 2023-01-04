@@ -232,8 +232,8 @@ const StartGameBot = ({ route, navigation }) => {
             fontSize: 28,
             fontWeight: "400",
             color: "#55c4f0",
-            marginTop: 10,
-            marginBottom: 30,
+            marginTop: 3,
+            height: Dimensions.get("window").height * 0.1,
           }}
         >
           NO TIMER
@@ -271,11 +271,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
+    marginTop: 3,
+    height: Dimensions.get("window").height * 0.1,
   },
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
     position: "relative",
-    paddingTop: Dimensions.get("window").height * 0.081,
+    paddingTop: Dimensions.get("window").height * 0.051,
   },
 });
 

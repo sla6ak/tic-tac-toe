@@ -2,11 +2,41 @@ import React, { useEffect, useRef } from "react";
 import { Text, Button } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
 import { StyleSheet, Dimensions, Animated, View } from "react-native";
-import { variableThema } from "../../helpers/variableThema";
+import { useSelector, useDispatch } from "react-redux";
+import { setSounds } from "../../redux/audioManager";
+import AudioManager from "../../helpers/AudioManager";
 
 export const ModalWin = ({ winGame, navigation }) => {
   const shown = new Animated.Value(0);
+  // musics *******************************
+  const dispatch = useDispatch();
+  const music = useSelector((state) => state.muteState);
 
+  useEffect(() => {
+    dispatch(setSounds({ homeMusic: false }));
+    return () => dispatch(setSounds({ homeMusic: true }));
+  }, []);
+
+  useEffect(() => {
+    if (!music) return;
+    // ничья
+    if (winGame.result === "drow") {
+      AudioManager.playAsync("drawMusic", false, 0.3);
+      return () => AudioManager.stopAsync("drawMusic");
+    }
+    if (winGame.result === "win") {
+      // поражение
+      if (winGame.nameWin === "bot" || winGame.nameWin === "player2") {
+        AudioManager.playAsync("looseMusic", false, 0.3);
+        return () => AudioManager.stopAsync("looseMusic");
+      }
+      // победа
+      AudioManager.playAsync("winMusic", false, 0.3);
+      return () => AudioManager.stopAsync("winMusic");
+    }
+  }, [music]);
+
+  // *****************************************
   useEffect(() => {
     Animated.timing(shown, {
       toValue: 1,
@@ -14,6 +44,7 @@ export const ModalWin = ({ winGame, navigation }) => {
       useNativeDriver: true,
     }).start();
   }, [winGame]);
+
   // opacity: shown
   return (
     <Flex center style={styles.conteiner}>
