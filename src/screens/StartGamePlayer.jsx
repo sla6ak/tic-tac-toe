@@ -10,8 +10,18 @@ import GameBoard from "../components/gameBoard/GameBoard";
 import { ModalWin } from "../components/modalWin/ModalWin";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
 import ButtonCast from "../components/buttonCast/ButtonCast";
+import { useDispatch } from "react-redux";
+import {
+  homeMusicStatus,
+  drawMusicStatus,
+  looseMusicStatus,
+  winMusicStatus,
+} from "../redux/audioManager";
+import { useSelector } from "react-redux";
 
 const StartGamePlayer = ({ route, navigation }) => {
+  const { mute } = useSelector((state) => state.audioManager);
+  const dispatch = useDispatch();
   const initialWinInfo = {
     result: "",
     winLetter: "",
@@ -29,6 +39,7 @@ const StartGamePlayer = ({ route, navigation }) => {
   const [timerStop, setTimerStop] = useState(false);
   const [whoStart, setWhoStart] = useState("player1");
   const [counter, setCounter] = useState({ player1: 0, player2: 0 });
+  const [modalOpen, setModalOpen] = useState(false);
 
   // при старте игры создаем доску
   useEffect(() => {
@@ -36,6 +47,16 @@ const StartGamePlayer = ({ route, navigation }) => {
     setWinCombinations(() => gameBoardClass.getSizeWinCombination(sizeBoard));
     setCounter({ player1: 0, player2: 0 });
   }, []);
+
+  // открывает модалку и отключает музыку
+  useEffect(() => {
+    if (winGame.result === "") return;
+    if (!mute) dispatch(homeMusicStatus(false));
+    if (winGame.result !== "") {
+      setModalOpen(true);
+      return;
+    }
+  }, [winGame]);
 
   // контролирует кто победил
   useEffect(() => {
@@ -147,6 +168,13 @@ const StartGamePlayer = ({ route, navigation }) => {
 
   // сбрасываем все настройки на стартовые
   const restart = () => {
+    if (!mute) {
+      dispatch(homeMusicStatus(true));
+      dispatch(drawMusicStatus(false));
+      dispatch(looseMusicStatus(false));
+      dispatch(winMusicStatus(false));
+    }
+    setModalOpen(false);
     setTimerStop(false);
     setWinGame(initialWinInfo);
     setTurnLetter("x");
@@ -178,12 +206,13 @@ const StartGamePlayer = ({ route, navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      <MathCounterPlayers counter={counter} />
-      <HeaderTurnLetter
-        result={winGame.result}
-        turnLetter={turnLetter}
-        turnName={turnName}
-      />
+      <MathCounterPlayers counter={counter}>
+        <HeaderTurnLetter
+          result={winGame.result}
+          turnLetter={turnLetter}
+          turnName={turnName}
+        />
+      </MathCounterPlayers>
 
       {gameBoard && winCombinations.length > 1 && (
         <GameBoard
@@ -194,18 +223,22 @@ const StartGamePlayer = ({ route, navigation }) => {
           winGameCombination={winGame.winCombination}
         />
       )}
-      {winGame.result !== "" && (
-        <ModalWin winGame={winGame} restart={restart} navigation={navigation} />
-      )}
-      {winGame.result !== "" && (
-        <Flex style={styles.butBox}>
-          <ButtonCast textBt={"RESTART"} onClickBt={restart} small={2} />
-          <ButtonCast
-            textBt={"SETTING"}
-            onClickBt={() => navigation.navigate("HomeP")}
-            small={2}
+      {modalOpen && (
+        <>
+          <ModalWin
+            winGame={winGame}
+            restart={restart}
+            navigation={navigation}
           />
-        </Flex>
+          <Flex style={styles.butBox}>
+            <ButtonCast textBt={"RESTART"} onClickBt={restart} small={2} />
+            <ButtonCast
+              textBt={"SETTING"}
+              onClickBt={() => navigation.navigate("HomeP")}
+              small={2}
+            />
+          </Flex>
+        </>
       )}
       {startTimer !== "" && winGame.result === "" && (
         <Timer
@@ -215,33 +248,33 @@ const StartGamePlayer = ({ route, navigation }) => {
         />
       )}
       {startTimer === "" && winGame.result === "" && (
-        <Text
+        <Flex
+          center
           style={{
-            fontSize: 28,
-            fontWeight: "400",
-            color: "#55c4f0",
-            marginTop: 3,
-            height: Dimensions.get("window").height * 0.1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            height: Dimensions.get("window").height * 0.09,
+            marginTop: Dimensions.get("window").height * 0.01,
           }}
         >
-          NO TIMER
-        </Text>
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: "600",
+              color: "#8d8d8d",
+            }}
+          >
+            NO TIMER
+          </Text>
+        </Flex>
       )}
     </Flex>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderColor: "#999",
-    borderWidth: 1,
-    height: Dimensions.get("window").height * 0.05,
-    width: Dimensions.get("window").width * 0.35,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: Dimensions.get("window").height * 0.01,
-  },
   butBox: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -252,8 +285,8 @@ const styles = StyleSheet.create({
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
     position: "relative",
-    paddingTop: Dimensions.get("window").height * 0.051,
-    paddingBottom: Dimensions.get("window").height * 0.031,
+    paddingTop: Dimensions.get("window").height * 0.07,
+    paddingBottom: Dimensions.get("window").height * 0.01,
   },
 });
 

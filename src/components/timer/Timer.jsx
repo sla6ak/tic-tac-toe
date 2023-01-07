@@ -63,7 +63,7 @@ export const Timer = ({ setTimeMove, timeMove, timerStop }) => {
 const styles = StyleSheet.create({
   conteiner: {
     flexDirection: "row",
-    marginTop: 3,
-    height: Dimensions.get("window").height * 0.1,
+    marginTop: Dimensions.get("window").height * 0.01,
+    height: Dimensions.get("window").height * 0.09,
   },
 });

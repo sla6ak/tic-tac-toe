@@ -6,12 +6,7 @@ import { variableThema } from "../../helpers/variableThema";
 const HeaderTurnLetter = ({ result, turnName, turnLetter }) => {
   useEffect(() => {}, [turnName]);
   return (
-    <Flex
-      direction="row"
-      style={{
-        marginBottom: 20,
-      }}
-    >
+    <Flex direction="row">
       {result === "" ? (
         <Flex
           direction="row"

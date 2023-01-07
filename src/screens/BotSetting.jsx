@@ -254,7 +254,7 @@ const BotSetting = ({ navigation }) => {
 const styles = StyleSheet.create({
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
-    paddingTop: Dimensions.get("window").height * 0.05,
+    paddingTop: Dimensions.get("window").height * 0.07,
   },
   titleSet: {
     fontSize: 18,

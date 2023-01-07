@@ -62,6 +62,7 @@ const Routers = () => {
             position: "absolute",
             backgroundColor: variableThema.backgroundApp,
             top: 0,
+            paddingTop: 10,
             height: Dimensions.get("window").height * 0.08,
           },
           headerStyle: {},

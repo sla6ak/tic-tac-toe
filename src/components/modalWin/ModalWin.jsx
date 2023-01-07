@@ -1,40 +1,40 @@
-import React, { useEffect, useRef } from "react";
-import { Text, Button } from "@react-native-material/core";
+import React, { useEffect } from "react";
+import { Text } from "@react-native-material/core";
 import { Flex } from "react-native-flex-layout";
-import { StyleSheet, Dimensions, Animated, View } from "react-native";
+import { StyleSheet, Dimensions, Animated } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { setSounds } from "../../redux/audioManager";
-import AudioManager from "../../helpers/AudioManager";
+import {
+  drawMusicStatus,
+  looseMusicStatus,
+  winMusicStatus,
+} from "../../redux/audioManager";
 
-export const ModalWin = ({ winGame, navigation }) => {
+export const ModalWin = ({ winGame }) => {
   const shown = new Animated.Value(0);
+  // reclama ***************************
   // musics *******************************
   const dispatch = useDispatch();
-  const music = useSelector((state) => state.muteState);
+  const { mute } = useSelector((state) => state.audioManager);
 
   useEffect(() => {
-    dispatch(setSounds({ homeMusic: false }));
-    return () => dispatch(setSounds({ homeMusic: true }));
-  }, []);
-
-  useEffect(() => {
-    if (!music) return;
+    if (mute) return;
     // ничья
     if (winGame.result === "drow") {
-      AudioManager.playAsync("drawMusic", false, 0.3);
-      return () => AudioManager.stopAsync("drawMusic");
+      dispatch(drawMusicStatus(true));
+      return;
     }
     if (winGame.result === "win") {
       // поражение
       if (winGame.nameWin === "bot" || winGame.nameWin === "player2") {
-        AudioManager.playAsync("looseMusic", false, 0.3);
-        return () => AudioManager.stopAsync("looseMusic");
+        dispatch(looseMusicStatus(true));
+        return;
       }
       // победа
-      AudioManager.playAsync("winMusic", false, 0.3);
-      return () => AudioManager.stopAsync("winMusic");
+      dispatch(winMusicStatus(true));
+      return;
     }
-  }, [music]);
+    return;
+  }, []);
 
   // *****************************************
   useEffect(() => {

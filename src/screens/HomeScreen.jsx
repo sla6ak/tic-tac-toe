@@ -5,26 +5,15 @@ import React, { useState, useEffect } from "react";
 import { variableThema } from "../helpers/variableThema";
 import ButtonCast from "../components/buttonCast/ButtonCast";
 import ButSong from "../components/butSong/ButSong";
-import AudioManager from "../helpers/AudioManager";
-import { useSelector, useDispatch } from "react-redux";
-import { setMute } from "../redux/muteState";
+import { useDispatch } from "react-redux";
+import { muteStatus } from "../redux/audioManager";
 
 const HomeScreen = ({ navigation }) => {
+  const [music, setMusic] = useState(true);
   const dispatch = useDispatch();
-  const music = useSelector((state) => state.muteState);
-  const homeMusic = useSelector((state) => state.audioManager.homeMusic);
-
-  const setMusic = () => {
-    dispatch(setMute(!music));
-  };
-
   useEffect(() => {
-    if (!music || !homeMusic) {
-      return () => AudioManager.stopAsync("homeMusic");
-    }
-    AudioManager.playAsync("homeMusic", true, 1);
-    return () => AudioManager.stopAsync("homeMusic");
-  }, [music, homeMusic]);
+    dispatch(muteStatus(!music));
+  }, [music]);
 
   return (
     <Flex fill center style={styles.conteiner}>
@@ -38,7 +27,6 @@ const HomeScreen = ({ navigation }) => {
         onClickBt={() => navigation.navigate("Player")}
       />
       <ButSong music={music} setMusic={setMusic} />
-      <Text style={styles.titleL}>Links:</Text>
       <A
         style={styles.policy}
         href="https://sla6ak.github.io/tic-tac-toe-privacy-policy/"
@@ -52,34 +40,21 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
-    paddingTop: Dimensions.get("window").height * 0.05,
+    paddingTop: Dimensions.get("window").height * 0.07,
   },
   nameApp: {
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: "800",
     color: variableThema.colorX,
-    marginBottom: Dimensions.get("window").height * 0.05,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: variableThema.titleApp,
-    marginBottom: Dimensions.get("window").height * 0.03,
-  },
-  titleL: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#47cfb275",
-    marginBottom: Dimensions.get("window").height * 0.03,
-    marginTop: Dimensions.get("window").height * 0.03,
+    marginBottom: Dimensions.get("window").height * 0.06,
   },
   policy: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "400",
     color: "#3568d4",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: Dimensions.get("window").height * 0.01,
+    marginTop: Dimensions.get("window").height * 0.06,
   },
 });
 export default HomeScreen;

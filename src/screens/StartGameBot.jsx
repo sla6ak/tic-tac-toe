@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { Text, Flex, Button } from "@react-native-material/core";
+import { Text, Flex } from "@react-native-material/core";
 import React, { useEffect, useState } from "react";
 import { variableThema } from "../helpers/variableThema";
 import { Timer } from "../components/timer/Timer";
@@ -10,6 +10,20 @@ import { ModalWin } from "../components/modalWin/ModalWin";
 import MathCounterBot from "../components/mathCounterBot/MathCounterBot";
 import HeaderTurnLetter from "../components/headerTurnLetter/HeaderTurnLetter";
 import ButtonCast from "../components/buttonCast/ButtonCast";
+import { useDispatch } from "react-redux";
+import {
+  homeMusicStatus,
+  drawMusicStatus,
+  looseMusicStatus,
+  winMusicStatus,
+} from "../redux/audioManager";
+
+// **********************
+import { useSelector } from "react-redux";
+import { useInterstitialAd, TestIds } from "react-native-google-mobile-ads";
+const reclamaID = "ca-app-pub-3796955223799964/5085997104";
+// const reclamaID = "ca-app-pub-3940256099942544/1033173712";
+// const reclamaID = TestIds.INTERSTITIAL;
 
 const StartGameBot = ({ route, navigation }) => {
   const initialWinInfo = {
@@ -29,6 +43,60 @@ const StartGameBot = ({ route, navigation }) => {
   const [timerStop, setTimerStop] = useState(false);
   const [whoStart, setWhoStart] = useState("player");
   const [counter, setCounter] = useState({ player: 0, bot: 0 });
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // ************Reclama******************
+  // чтоб не ломать плеер нужно отключить музыку перед рекламой и включить после
+  // запомним была ли музыка включена перед рекламой или нет
+  const { mute } = useSelector((state) => state.audioManager);
+  const dispatch = useDispatch();
+
+  const { isLoaded, isClosed, load, show } = useInterstitialAd(reclamaID, {
+    requestNonPersonalizedAdsOnly: true,
+  });
+
+  useEffect(() => {
+    if (isLoaded) return;
+    try {
+      load();
+    } catch (error) {
+      console.log("загрузка рекламы не удается проверте интернет", error);
+    }
+  }, [load, isLoaded]);
+
+  useEffect(() => {
+    if (winGame.result === "") return;
+    if (!mute) dispatch(homeMusicStatus(false));
+    if (winGame.result !== "" && isLoaded) {
+      // покажим рекламу при победе чаще
+      if (winGame.result !== "" && getBestMove.getRandomInt(10) > 6) {
+        try {
+          show();
+        } catch (error) {
+          console.log(
+            "реклама загружена но устройство не смогло ее отобразить",
+            error
+          );
+          // в эроре откроем модалку
+          setModalOpen(true);
+        }
+        return;
+      }
+      setModalOpen(true);
+      return;
+    }
+
+    if (winGame.result !== "" && !isLoaded) {
+      setModalOpen(true);
+      return;
+    }
+  }, [isLoaded, winGame]);
+
+  useEffect(() => {
+    if (!isClosed) return;
+    setModalOpen(true);
+  }, [isClosed]);
+  // **************R***************
 
   // при старте игры создаем доску
   useEffect(() => {
@@ -52,6 +120,8 @@ const StartGameBot = ({ route, navigation }) => {
       setBtDis(true);
       const nameW = gameBoard[winG[0]].move;
       const letterW = gameBoard[winG[0]].letter;
+      setTimerStop(true);
+
       setWinGame({
         result: "win",
         winLetter: letterW,
@@ -62,7 +132,6 @@ const StartGameBot = ({ route, navigation }) => {
         const x = prevW[nameW] + 1;
         return { ...prevW, [nameW]: x };
       });
-      setTimerStop(true);
       return;
     }
 
@@ -174,6 +243,13 @@ const StartGameBot = ({ route, navigation }) => {
 
   // сбрасываем все настройки на стартовые
   const restart = () => {
+    if (!mute) {
+      dispatch(homeMusicStatus(true));
+      dispatch(drawMusicStatus(false));
+      dispatch(looseMusicStatus(false));
+      dispatch(winMusicStatus(false));
+    }
+    setModalOpen(false);
     setTimerStop(false);
     setWinGame(initialWinInfo);
     setTurnLetter("x");
@@ -203,12 +279,13 @@ const StartGameBot = ({ route, navigation }) => {
 
   return (
     <Flex fill center style={styles.conteiner}>
-      <MathCounterBot lvl={lvl} counter={counter} />
-      <HeaderTurnLetter
-        result={winGame.result}
-        turnLetter={turnLetter}
-        turnName={turnName}
-      />
+      <MathCounterBot lvl={lvl} counter={counter}>
+        <HeaderTurnLetter
+          result={winGame.result}
+          turnLetter={turnLetter}
+          turnName={turnName}
+        />
+      </MathCounterBot>
 
       {gameBoard && winCombinations.length > 1 && (
         <GameBoard
@@ -227,57 +304,58 @@ const StartGameBot = ({ route, navigation }) => {
         />
       )}
       {startTimer === "" && winGame.result === "" && (
-        <Text
+        <Flex
+          center
           style={{
-            fontSize: 28,
-            fontWeight: "400",
-            color: "#55c4f0",
-            marginTop: 3,
-            height: Dimensions.get("window").height * 0.1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            height: Dimensions.get("window").height * 0.09,
+            marginTop: Dimensions.get("window").height * 0.01,
           }}
         >
-          NO TIMER
-        </Text>
-      )}
-      {winGame.result !== "" && (
-        <ModalWin winGame={winGame} restart={restart} navigation={navigation} />
-      )}
-      {winGame.result !== "" && (
-        <Flex style={styles.butBox}>
-          <ButtonCast textBt={"RESTART"} onClickBt={restart} small={2} />
-          <ButtonCast
-            textBt={"SETTING"}
-            onClickBt={() => navigation.navigate("HomeB")}
-            small={2}
-          />
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: "600",
+              color: "#8d8d8d",
+            }}
+          >
+            NO TIMER
+          </Text>
         </Flex>
+      )}
+      {modalOpen && (
+        <>
+          <ModalWin winGame={winGame} />
+          <Flex style={styles.butBox}>
+            <ButtonCast textBt={"RESTART"} onClickBt={restart} small={2} />
+            <ButtonCast
+              textBt={"SETTING"}
+              onClickBt={() => navigation.navigate("HomeB")}
+              small={2}
+            />
+          </Flex>
+        </>
       )}
     </Flex>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderColor: "#999",
-    borderWidth: 1,
-    height: Dimensions.get("window").height * 0.05,
-    width: Dimensions.get("window").width * 0.35,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: Dimensions.get("window").height * 0.01,
-  },
   butBox: {
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
     marginTop: 3,
-    height: Dimensions.get("window").height * 0.1,
+    // height: Dimensions.get("window").height * 0.1,
   },
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
     position: "relative",
-    paddingTop: Dimensions.get("window").height * 0.051,
+    paddingTop: Dimensions.get("window").height * 0.07,
+    paddingBottom: Dimensions.get("window").height * 0.01,
   },
 });
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "tic-tac-toe",
     "slug": "tic-tac-toe",
-    "version": "1.5.0",
+    "version": "1.7.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,10 +17,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "tictactoe.slabakxaker"
     },
     "android": {
-      "versionCode": 7,
+      "versionCode": 9,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -38,5 +39,9 @@
     "runtimeVersion": {
       "policy": "sdkVersion"
     }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-3796955223799964~8832265452",
+    "ios_app_id": "ca-app-pub-XXXXXXXXXXXXXX"
   }
 }

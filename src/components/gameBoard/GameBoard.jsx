@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import View from "@expo/html-elements/build/primitives/View";
 import { variableThema } from "../../helpers/variableThema";
-import AudioManager from "../../helpers/AudioManager";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { moveMusicStatus } from "../../redux/audioManager";
 
 const GameBoard = ({
   gamePress,
@@ -16,7 +16,8 @@ const GameBoard = ({
   const [sizeSq, setSizeSq] = useState("33.3%"); //
   const [sizeFont, setSizeFont] = useState(30);
   const [sizeFontPlus, setSizeFontPlus] = useState(10);
-  const music = useSelector((state) => state.muteState);
+  const { mute } = useSelector((state) => state.audioManager);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const window = Dimensions.get("window");
@@ -54,10 +55,9 @@ const GameBoard = ({
     }
   }, [sizeBoard]);
 
-  const klikMusik = () => {
-    if (!music) return;
-    AudioManager.playAsync("moveMusic", false, 0.5);
-    return () => AudioManager.stopAsync("moveMusic");
+  const klikMusik = async () => {
+    if (!mute) dispatch(moveMusicStatus(true));
+    return;
   };
 
   return (
