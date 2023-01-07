@@ -151,7 +151,7 @@ const PlayerSetting = ({ navigation }) => {
 const styles = StyleSheet.create({
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
-    paddingTop: Dimensions.get("window").height * 0.08,
+    paddingTop: Dimensions.get("window").height * 0.07,
   },
   start: {
     fontSize: 22,

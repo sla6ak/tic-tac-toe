@@ -16,6 +16,10 @@ https://expo.dev/accounts/slabak
 
 ## eas build --platform android
 
+## expo build:android -t app-bundle
+
+https://docs.expo.dev/archive/classic-updates/building-standalone-apps/#building-for-android
+
 важно скачать и хранить исходники сборки так как они удаляются на сервере через 30 суток!
 
 ## шаг к деплою
@@ -48,3 +52,19 @@ The Tic-Tac-Toe app has a complex bot. Have a nice game.
 full:
 Tic Tac Toe app has different game levels and complex bot
 You can also make the game more difficult by choosing other board sizes, such as 4*4 or 5*5. If you do not lose to the bot, you can choose a timer, this will give the game new emotions! If you hesitate, the bot makes a move out of turn! Have a nice game.
+
+## решение ошибок сборок
+
+npm i react-native-reanimated
+Добавлять plugins: ['react-native-reanimated/plugin'],ниже пресетов в ' <your_app_root_folder> /babel.config.js'.
+Добавлять import 'react-native-gesture-handler';в начало ' <your_app_root_folder> /App.js'.
+Сбросить кэш с помощью npx react-native start --reset-cache
+
+## prebuild
+
+документация в експо позволяет юзать библиотеки сторонние без экспо но меняет структуру проекта.
+
+## управление музыкой
+
+Имеем обертку в апп где грузим все треки в плеер.
+с помощью редакса управляем загружеными треками по условию тру фолс из разных компонентов.

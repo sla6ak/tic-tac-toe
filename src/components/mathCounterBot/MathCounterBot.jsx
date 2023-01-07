@@ -3,9 +3,21 @@ import { Text, Flex } from "@react-native-material/core";
 import React, { useEffect } from "react";
 import { variableThema } from "../../helpers/variableThema";
 
-const MathCounterBot = ({ lvl, counter }) => {
+const MathCounterBot = ({ lvl, counter, children }) => {
   return (
-    <Flex center>
+    <Flex
+      center
+      style={{
+        backgroundColor: "#e4e4e4",
+        marginBottom: Dimensions.get("window").height * 0.02,
+        borderRadius: 10,
+        borderWidth: 5,
+        paddingBottom: Dimensions.get("window").height * 0.012,
+        paddingTop: Dimensions.get("window").height * 0.012,
+        borderColor: "#aaaaaa",
+        width: Dimensions.get("window").width * 0.9,
+      }}
+    >
       <Text
         style={{
           fontSize: 22,
@@ -67,6 +79,7 @@ const MathCounterBot = ({ lvl, counter }) => {
           {counter.bot}
         </Text>
       </Flex>
+      {children}
     </Flex>
   );
 };

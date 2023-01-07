@@ -1,9 +1,10 @@
 import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Flex } from "@react-native-material/core";
 import View from "@expo/html-elements/build/primitives/View";
 import { variableThema } from "../../helpers/variableThema";
+import { useSelector, useDispatch } from "react-redux";
+import { moveMusicStatus } from "../../redux/audioManager";
 
 const GameBoard = ({
   gamePress,
@@ -15,6 +16,8 @@ const GameBoard = ({
   const [sizeSq, setSizeSq] = useState("33.3%"); //
   const [sizeFont, setSizeFont] = useState(30);
   const [sizeFontPlus, setSizeFontPlus] = useState(10);
+  const { mute } = useSelector((state) => state.audioManager);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const window = Dimensions.get("window");
@@ -52,6 +55,11 @@ const GameBoard = ({
     }
   }, [sizeBoard]);
 
+  const klikMusik = async () => {
+    if (!mute) dispatch(moveMusicStatus(true));
+    return;
+  };
+
   return (
     <View style={styles.conteiner}>
       {gameBoard.map((el, ind) => {
@@ -79,6 +87,7 @@ const GameBoard = ({
               delayLongPress={10}
               onLongPress={() => {
                 gamePress({ el, ind });
+                klikMusik();
               }}
               disabled={btDis}
               style={styles.tothSquer}

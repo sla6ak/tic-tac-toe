@@ -1,15 +1,23 @@
 import { Text, StatusBar, Dimensions, StyleSheet } from "react-native";
 import { Flex } from "@react-native-material/core";
 import { A } from "@expo/html-elements";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { variableThema } from "../helpers/variableThema";
 import ButtonCast from "../components/buttonCast/ButtonCast";
+import ButSong from "../components/butSong/ButSong";
+import { useDispatch } from "react-redux";
+import { muteStatus } from "../redux/audioManager";
 
 const HomeScreen = ({ navigation }) => {
+  const [music, setMusic] = useState(true);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(muteStatus(!music));
+  }, [music]);
+
   return (
     <Flex fill center style={styles.conteiner}>
       <Text style={styles.nameApp}>Tic-tac-toe!</Text>
-      <Text style={styles.title}>Choose mode:</Text>
       <ButtonCast
         textBt={"One player"}
         onClickBt={() => navigation.navigate("Bot")}
@@ -18,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
         textBt={"Two player"}
         onClickBt={() => navigation.navigate("Player")}
       />
-      <Text style={styles.titleL}>Links:</Text>
+      <ButSong music={music} setMusic={setMusic} />
       <A
         style={styles.policy}
         href="https://sla6ak.github.io/tic-tac-toe-privacy-policy/"
@@ -32,34 +40,21 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   conteiner: {
     backgroundColor: variableThema.backgroundApp,
-    paddingTop: Dimensions.get("window").height * 0.08,
+    paddingTop: Dimensions.get("window").height * 0.07,
   },
   nameApp: {
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: "800",
     color: variableThema.colorX,
-    marginBottom: Dimensions.get("window").height * 0.05,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: variableThema.titleApp,
-    marginBottom: Dimensions.get("window").height * 0.03,
-  },
-  titleL: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#47cfb275",
-    marginBottom: Dimensions.get("window").height * 0.03,
-    marginTop: Dimensions.get("window").height * 0.1,
+    marginBottom: Dimensions.get("window").height * 0.06,
   },
   policy: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "400",
     color: "#3568d4",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: Dimensions.get("window").height * 0.01,
+    marginTop: Dimensions.get("window").height * 0.06,
   },
 });
 export default HomeScreen;
